@@ -503,7 +503,7 @@ class _PantoSetupScreenState extends State<PantoSetupScreen> {
             const Spacer(),
             ElevatedButton(
               onPressed: () {
-                final words = List.from(pantoWords)..shuffle();
+                final words = List<String>.from(pantoWords)..shuffle();
                 Navigator.push(context, MaterialPageRoute(builder: (_) => PantoGameScreen(time: _time, words: words)));
               },
               style: ElevatedButton.styleFrom(backgroundColor: AppColors.pantoBlue, minimumSize: const Size(double.infinity, 50)),
