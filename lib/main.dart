@@ -1,91 +1,157 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-void main() => runApp(const PartyGamesApp());
+void main() {
+  runApp(const GamePartyApp());
+}
 
-class PartyGamesApp extends StatelessWidget {
-  const PartyGamesApp({super.key});
+// ==================== COLORS & THEME ====================
+class AppColors {
+  static const bg = Color(0xFF090713);
+  static const cardBg = Color(0xFF171128);
+  static const purple = Color(0xFF8B35F5);
+  static const lightPurple = Color(0xFFC45CFF);
+  static const gold = Color(0xFFFFBF36);
+  static const spyRed = Color(0xFFF52D4F);
+  static const pantoBlue = Color(0xFF2585FF);
+  static const textMain = Colors.white;
+  static const textSub = Color(0xFFA7A0B8);
+}
+
+class GamePartyApp extends StatelessWidget {
+  const GamePartyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'بازی دورهمی',
+      title: 'Game Party',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        useMaterial3: true,
         brightness: Brightness.dark,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFFFC107),
-          brightness: Brightness.dark,
+        scaffoldBackgroundColor: AppColors.bg,
+        textTheme: GoogleFonts.vazirmatnTextTheme(Theme.of(context).textTheme)
+            .apply(bodyColor: AppColors.textMain, displayColor: AppColors.textMain),
+        colorScheme: const ColorScheme.dark(
+          primary: AppColors.purple,
+          secondary: AppColors.gold,
+          surface: AppColors.cardBg,
         ),
+        useMaterial3: true,
       ),
-      builder: (context, child) =>
-          Directionality(textDirection: TextDirection.rtl, child: child!),
-      home: const HomeScreen(),
+      builder: (context, child) => Directionality(
+        textDirection: TextDirection.rtl,
+        child: child!,
+      ),
+      home: const SplashScreen(),
     );
   }
 }
 
-// ==================== HOME ====================
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+// ==================== SPLASH SCREEN ====================
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(const Duration(seconds: 2), () {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF1A1A2E), Color(0xFF16213E)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+          gradient: RadialGradient(
+            colors: [Color(0xFF2A1548), AppColors.bg],
+            radius: 1.2,
           ),
         ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                const Text('🎉', style: TextStyle(fontSize: 60)),
-                const SizedBox(height: 10),
-                const Text('بازی دورهمی',
-                    style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.amber)),
-                const Text('برای شب‌های دوستانه',
-                    style: TextStyle(color: Colors.white54)),
-                const SizedBox(height: 40),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _GameCard(
-                        emoji: '🕵️',
-                        title: 'جاسوس',
-                        subtitle: 'کی جاسوسه؟',
-                        color: const Color(0xFF6A1B9A),
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const SpySetupScreen())),
-                      ),
-                      const SizedBox(height: 16),
-                      _GameCard(
-                        emoji: '🎭',
-                        title: 'پانتومیم',
-                        subtitle: 'بی‌صدا بازی کن',
-                        color: const Color(0xFF1565C0),
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const PantoSetupScreen())),
-                      ),
-                    ],
-                  ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('🕵️', style: TextStyle(fontSize: 80)),
+              const SizedBox(height: 16),
+              Text(
+                'Game Party',
+                style: GoogleFonts.vazirmatn(
+                  fontSize: 48,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.gold,
+                  shadows: [const Shadow(color: AppColors.gold, blurRadius: 20)],
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 8),
+              const Text('Play Together • Laugh Together', style: TextStyle(color: AppColors.textSub)),
+              const SizedBox(height: 40),
+              const CircularProgressIndicator(color: AppColors.purple),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ==================== HOME SCREEN ====================
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              // Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const CircleAvatar(
+                    backgroundColor: AppColors.cardBg,
+                    child: Icon(Icons.person, color: AppColors.purple),
+                  ),
+                  Text('Game Party', style: GoogleFonts.vazirmatn(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.gold)),
+                  const Icon(Icons.settings, color: AppColors.textSub),
+                ],
+              ),
+              const SizedBox(height: 40),
+              // Cards
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _GameCard(
+                      title: 'بازی جاسوس',
+                      subtitle: 'ببین چه کسی جاسوس است!',
+                      emoji: '🕵️‍♂️',
+                      color: AppColors.spyRed,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SpySetupScreen())),
+                    ),
+                    const SizedBox(height: 20),
+                    _GameCard(
+                      title: 'بازی پانتومیم',
+                      subtitle: 'بدون حرف زدن، کلمه را اجرا کن!',
+                      emoji: '🎭',
+                      color: AppColors.pantoBlue,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PantoSetupScreen())),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -94,95 +160,69 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _GameCard extends StatelessWidget {
-  final String emoji, title, subtitle;
+  final String title, subtitle, emoji;
   final Color color;
   final VoidCallback onTap;
-  const _GameCard({
-    required this.emoji,
-    required this.title,
-    required this.subtitle,
-    required this.color,
-    required this.onTap,
-  });
+
+  const _GameCard({required this.title, required this.subtitle, required this.emoji, required this.color, required this.onTap});
+
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [color, color.withOpacity(0.5)],
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 180,
+        decoration: BoxDecoration(
+          color: AppColors.cardBg,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: color.withOpacity(0.5), width: 1.5),
+          boxShadow: [
+            BoxShadow(color: color.withOpacity(0.15), blurRadius: 20, spreadRadius: 2, offset: const Offset(0, 10))
+          ],
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              left: -10,
+              bottom: -10,
+              child: Text(emoji, style: const TextStyle(fontSize: 100)),
             ),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                  color: color.withOpacity(0.3),
-                  blurRadius: 15,
-                  offset: const Offset(0, 5))
-            ],
-          ),
-          child: Row(
-            children: [
-              Text(emoji, style: const TextStyle(fontSize: 48)),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title,
-                        style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white)),
-                    Text(subtitle,
-                        style: const TextStyle(color: Colors.white70)),
-                  ],
-                ),
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(title, style: GoogleFonts.vazirmatn(fontSize: 26, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  Text(subtitle, style: const TextStyle(color: AppColors.textSub, fontSize: 14)),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('شروع بازی', style: TextStyle(fontWeight: FontWeight.bold)),
+                        SizedBox(width: 8),
+                        Icon(Icons.play_arrow, size: 18),
+                      ],
+                    ),
+                  )
+                ],
               ),
-              const Icon(Icons.arrow_back_ios_new, color: Colors.white70),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-// ==================== SPY WORDS ====================
-const spyCategories = <String, List<String>>{
-  'غذا': [
-    'پیتزا', 'کباب کوبیده', 'قورمه سبزی', 'آش رشته', 'فسنجان',
-    'زرشک پلو', 'عدس پلو', 'سالاد شیرازی', 'املت', 'کتلت'
-  ],
-  'مکان': [
-    'بیمارستان', 'فرودگاه', 'دانشگاه', 'رستوران', 'پارک',
-    'کوه', 'جنگل', 'ساحل', 'سینما', 'کتابخانه'
-  ],
-  'حیوان': [
-    'شیر', 'فیل', 'زرافه', 'پنگوئن', 'دلفین',
-    'طوطی', 'کوالا', 'گربه', 'خرس', 'کبوتر'
-  ],
-  'وسیله': [
-    'چتر', 'عینک', 'ساعت', 'کیف', 'لپ‌تاپ',
-    'صندلی', 'ماشین', 'آینه', 'چاقو', 'کلید'
-  ],
-  'حرفه': [
-    'دکتر', 'معلم', 'خلبان', 'آشپز', 'بازیگر',
-    'راننده', 'پلیس', 'نقاش', 'خبرنگار', 'خواننده'
-  ],
-  'فیلم': [
-    'تایتانیک', 'آواتار', 'ماتریکس', 'شرک', 'شیر شاه',
-    'هری پاتر', 'فروزن', 'جوراسیک پارک'
-  ],
-};
-
-// ==================== SPY SETUP ====================
+// ==================== SPY FLOW ====================
 class SpySetupScreen extends StatefulWidget {
   const SpySetupScreen({super.key});
   @override
@@ -190,153 +230,65 @@ class SpySetupScreen extends StatefulWidget {
 }
 
 class _SpySetupScreenState extends State<SpySetupScreen> {
-  final List<String> _players = ['بازیکن ۱', 'بازیکن ۲', 'بازیکن ۳'];
-  final TextEditingController _nameCtrl = TextEditingController();
-  int _spyCount = 1;
-  String _category = 'غذا';
+  int _players = 4;
+  int _spies = 1;
+  int _time = 120;
 
   @override
-  void dispose() {
-    _nameCtrl.dispose();
-    super.dispose();
-  }
-
-  void _addPlayer() {
-    final name = _nameCtrl.text.trim();
-    if (name.isEmpty) return;
-    setState(() {
-      _players.add(name);
-      _nameCtrl.clear();
-    });
-  }
-
-  void _start() {
-    if (_players.length < 3) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('حداقل ۳ بازیکن لازم است')),
-      );
-      return;
-    }
-    final maxSpies = (_players.length ~/ 2).clamp(1, 5);
-    final spies = _spyCount.clamp(1, maxSpies);
-    final wordList = spyCategories[_category]!;
-    final word = wordList[Random().nextInt(wordList.length)];
-    final players = List<String>.from(_players)..shuffle();
-    final spyIndices = <int>{};
-    while (spyIndices.length < spies) {
-      spyIndices.add(Random().nextInt(players.length));
-    }
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => SpyRevealScreen(
-          players: players,
-          spyIndices: spyIndices,
-          word: word,
-          category: _category,
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('تنظیم بازی جاسوس'), backgroundColor: Colors.transparent),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildSettingRow('تعداد بازیکنان', '$_players', () => setState(() => _players = min(_players + 1, 12)), () => setState(() => _players = max(_players - 1, 3))),
+            _buildSettingRow('تعداد جاسوس‌ها', '$_spies', () => setState(() => _spies = min(_spies + 1, 3)), () => setState(() => _spies = max(_spies - 1, 1))),
+            _buildSettingRow('زمان بازی (ثانیه)', '$_time', () => setState(() => _time += 30), () => setState(() => _time = max(_time - 30, 60))),
+            const Spacer(),
+            ElevatedButton(
+              onPressed: () {
+                final word = spyWords[Random().nextInt(spyWords.length)];
+                Navigator.push(context, MaterialPageRoute(builder: (_) => SpyRevealScreen(totalPlayers: _players, spies: _spies, time: _time, word: word)));
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.spyRed, padding: const EdgeInsets.symmetric(vertical: 16)),
+              child: const Text('شروع بازی', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            )
+          ],
         ),
       ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final maxSpies = (_players.length ~/ 2).clamp(1, 5);
-    return Scaffold(
-      appBar: AppBar(title: const Text('🕵️ تنظیم بازی جاسوس')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
+  Widget _buildSettingRow(String title, String value, VoidCallback inc, VoidCallback dec) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(16)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('بازیکن‌ها',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
+          Text(title, style: const TextStyle(fontSize: 16)),
           Row(
             children: [
-              Expanded(
-                child: TextField(
-                  controller: _nameCtrl,
-                  decoration: const InputDecoration(
-                    hintText: 'نام بازیکن',
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                  ),
-                  onSubmitted: (_) => _addPlayer(),
-                ),
-              ),
-              const SizedBox(width: 8),
-              IconButton.filled(
-                  onPressed: _addPlayer, icon: const Icon(Icons.add)),
+              IconButton(icon: const Icon(Icons.remove_circle_outline, color: AppColors.spyRed), onPressed: dec),
+              Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              IconButton(icon: const Icon(Icons.add_circle_outline, color: AppColors.spyRed), onPressed: inc),
             ],
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: _players.asMap().entries.map((e) {
-              return Chip(
-                label: Text(e.value),
-                onDeleted: _players.length > 3
-                    ? () => setState(() => _players.removeAt(e.key))
-                    : null,
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 24),
-          const Text('تعداد جاسوس',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            children: List.generate(
-                maxSpies,
-                (i) => ChoiceChip(
-                      label: Text('${i + 1}'),
-                      selected: _spyCount == i + 1,
-                      onSelected: (_) => setState(() => _spyCount = i + 1),
-                    )),
-          ),
-          const SizedBox(height: 24),
-          const Text('دستهٔ کلمات',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: spyCategories.keys
-                .map((c) => ChoiceChip(
-                      label: Text(c),
-                      selected: _category == c,
-                      onSelected: (_) => setState(() => _category = c),
-                    ))
-                .toList(),
-          ),
-          const SizedBox(height: 32),
-          FilledButton.icon(
-            onPressed: _start,
-            icon: const Icon(Icons.play_arrow),
-            label: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 12),
-              child: Text('شروع بازی', style: TextStyle(fontSize: 18)),
-            ),
-          ),
+          )
         ],
       ),
     );
   }
 }
 
-// ==================== SPY REVEAL ====================
+const spyWords = ['پیتزا', 'بیمارستان', 'شیر', 'چتر', 'دکتر', 'تایتانیک', 'فرودگاه', 'کتاب', 'آشپز'];
+
 class SpyRevealScreen extends StatefulWidget {
-  final List<String> players;
-  final Set<int> spyIndices;
-  final String word, category;
-  const SpyRevealScreen({
-    super.key,
-    required this.players,
-    required this.spyIndices,
-    required this.word,
-    required this.category,
-  });
+  final int totalPlayers, spies, time;
+  final String word;
+  const SpyRevealScreen({super.key, required this.totalPlayers, required this.spies, required this.time, required this.word});
   @override
   State<SpyRevealScreen> createState() => _SpyRevealScreenState();
 }
@@ -344,119 +296,74 @@ class SpyRevealScreen extends StatefulWidget {
 class _SpyRevealScreenState extends State<SpyRevealScreen> {
   int _current = 0;
   bool _revealed = false;
+  late List<bool> _roles;
 
-  void _next() {
-    if (_current + 1 < widget.players.length) {
-      setState(() {
-        _current++;
-        _revealed = false;
-      });
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (_) => SpyDiscussionScreen(
-                  players: widget.players,
-                  spyIndices: widget.spyIndices,
-                  word: widget.word,
-                )),
-      );
-    }
+  @override
+  void initState() {
+    super.initState();
+    _roles = List.generate(widget.totalPlayers, (_) => false);
+    for (int i = 0; i < widget.spies; i++) _roles[i] = true;
+    _roles.shuffle();
   }
 
   @override
   Widget build(BuildContext context) {
-    final isSpy = widget.spyIndices.contains(_current);
-    final name = widget.players[_current];
+    bool isSpy = _roles[_current];
     return Scaffold(
-      appBar: AppBar(
-        title: Text('نقش ${_current + 1} از ${widget.players.length}'),
-        automaticallyImplyLeading: false,
-      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(name,
-                  style: const TextStyle(
-                      fontSize: 28, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              const Text('گوشی را به این شخص بده',
-                  style: TextStyle(color: Colors.white54)),
+              Text('بازیکن ${_current + 1}', style: GoogleFonts.vazirmatn(fontSize: 28, fontWeight: FontWeight.bold)),
               const SizedBox(height: 40),
               if (!_revealed)
                 GestureDetector(
                   onTap: () => setState(() => _revealed = true),
                   child: Container(
-                    padding: const EdgeInsets.all(40),
-                    decoration: BoxDecoration(
-                      color: Colors.amber.withOpacity(0.15),
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.amber, width: 2),
-                    ),
+                    width: 200, height: 300,
+                    decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(20), border: Border.all(color: AppColors.spyRed)),
                     child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.touch_app, size: 60, color: Colors.amber),
-                        SizedBox(height: 8),
-                        Text('برای دیدن نقش لمس کن',
-                            style: TextStyle(color: Colors.amber)),
+                        Icon(Icons.lock, size: 60, color: AppColors.spyRed),
+                        SizedBox(height: 16),
+                        Text('برای دیدن نقش لمس کن'),
                       ],
                     ),
                   ),
                 )
               else
                 Container(
-                  padding: const EdgeInsets.all(24),
+                  width: 200, height: 300,
                   decoration: BoxDecoration(
-                    color: isSpy ? Colors.red.shade900 : Colors.green.shade900,
+                    color: isSpy ? AppColors.spyRed.withOpacity(0.2) : AppColors.cardBg,
                     borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: isSpy ? AppColors.spyRed : AppColors.purple, width: 2),
                   ),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(isSpy ? '🕵️' : '👤',
-                          style: const TextStyle(fontSize: 60)),
-                      const SizedBox(height: 12),
-                      if (isSpy) ...[
-                        const Text('تو جاسوسی!',
-                            style: TextStyle(
-                                fontSize: 28, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 8),
-                        Text('دستهٔ کلمه: ${widget.category}',
-                            style: const TextStyle(fontSize: 18)),
-                        const SizedBox(height: 8),
-                        const Text('وانمود کن می‌دونی کلمه چیه!',
-                            textAlign: TextAlign.center),
-                      ] else ...[
-                        const Text('کلمهٔ تو:',
-                            style: TextStyle(fontSize: 18)),
-                        const SizedBox(height: 8),
-                        Text(widget.word,
-                            style: const TextStyle(
-                                fontSize: 32, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 8),
-                        Text('دسته: ${widget.category}',
-                            style: const TextStyle(color: Colors.white70)),
-                      ],
+                      Text(isSpy ? '🕵️' : '👤', style: const TextStyle(fontSize: 60)),
+                      const SizedBox(height: 16),
+                      Text(isSpy ? 'تو جاسوسی!' : widget.word, style: GoogleFonts.vazirmatn(fontSize: 24, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
-              const SizedBox(height: 40),
+              const Spacer(),
               if (_revealed)
-                FilledButton.icon(
-                  onPressed: _next,
-                  icon: const Icon(Icons.arrow_back),
-                  label: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 20),
-                    child: Text(
-                        _current + 1 < widget.players.length
-                            ? 'نفر بعدی'
-                            : 'شروع بحث',
-                        style: const TextStyle(fontSize: 18)),
-                  ),
-                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_current + 1 < widget.totalPlayers) {
+                      setState(() { _current++; _revealed = false; });
+                    } else {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => SpyTimerScreen(time: widget.time, roles: _roles, word: widget.word)));
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50), backgroundColor: AppColors.spyRed),
+                  child: Text(_current + 1 < widget.totalPlayers ? 'نفر بعدی' : 'شروع بحث', style: const TextStyle(fontSize: 18)),
+                )
             ],
           ),
         ),
@@ -465,218 +372,101 @@ class _SpyRevealScreenState extends State<SpyRevealScreen> {
   }
 }
 
-// ==================== SPY DISCUSSION ====================
-class SpyDiscussionScreen extends StatefulWidget {
-  final List<String> players;
-  final Set<int> spyIndices;
+class SpyTimerScreen extends StatefulWidget {
+  final int time;
+  final List<bool> roles;
   final String word;
-  const SpyDiscussionScreen({
-    super.key,
-    required this.players,
-    required this.spyIndices,
-    required this.word,
-  });
+  const SpyTimerScreen({super.key, required this.time, required this.roles, required this.word});
   @override
-  State<SpyDiscussionScreen> createState() => _SpyDiscussionScreenState();
+  State<SpyTimerScreen> createState() => _SpyTimerScreenState();
 }
 
-class _SpyDiscussionScreenState extends State<SpyDiscussionScreen> {
+class _SpyTimerScreenState extends State<SpyTimerScreen> {
+  late int _seconds;
   Timer? _timer;
-  int _seconds = 180;
-  bool _timerRunning = false;
 
-  void _toggleTimer() {
-    if (_timerRunning) {
-      _timer?.cancel();
-      setState(() => _timerRunning = false);
-    } else {
-      setState(() => _timerRunning = true);
-      _timer = Timer.periodic(const Duration(seconds: 1), (t) {
-        if (_seconds <= 0) {
-          t.cancel();
-          setState(() => _timerRunning = false);
-        } else {
-          setState(() => _seconds--);
-        }
-      });
-    }
+  @override
+  void initState() {
+    super.initState();
+    _seconds = widget.time;
+    _timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (_seconds > 0) { setState(() => _seconds--); } else { t.cancel(); }
+    });
   }
 
   @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  String get _timeStr {
-    final m = (_seconds ~/ 60).toString().padLeft(2, '0');
-    final s = (_seconds % 60).toString().padLeft(2, '0');
-    return '$m:$s';
-  }
+  void dispose() { _timer?.cancel(); super.dispose(); }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('بحث و گفتگو')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
+      appBar: AppBar(title: const Text('بحث و گفتگو'), backgroundColor: Colors.transparent),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('${_seconds ~/ 60}:${(_seconds % 60).toString().padLeft(2, '0')}', style: GoogleFonts.vazirmatn(fontSize: 80, fontWeight: FontWeight.bold, color: AppColors.spyRed)),
+            const SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => SpyResultScreen(roles: widget.roles, word: widget.word))),
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.purple),
+              child: const Text('پایان دور و رأی‌گیری'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SpyResultScreen extends StatefulWidget {
+  final List<bool> roles;
+  final String word;
+  const SpyResultScreen({super.key, required this.roles, required this.word});
+  @override
+  State<SpyResultScreen> createState() => _SpyResultScreenState();
+}
+
+class _SpyResultScreenState extends State<SpyResultScreen> {
+  late ConfettiController _controller;
+  @override
+  void initState() { super.initState(); _controller = ConfettiController(duration: const Duration(seconds: 3))..play(); }
+  @override
+  void dispose() { _controller.dispose(); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
         children: [
-          const Text(
-              'به نوبت دربارهٔ کلمه صحبت کنید و جاسوس را پیدا کنید!',
-              style: TextStyle(fontSize: 16),
-              textAlign: TextAlign.center),
-          const SizedBox(height: 24),
           Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(_timeStr,
-                    style: const TextStyle(
-                        fontSize: 64,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.amber)),
-                const SizedBox(height: 8),
-                FilledButton.tonalIcon(
-                  onPressed: _toggleTimer,
-                  icon: Icon(_timerRunning ? Icons.pause : Icons.play_arrow),
-                  label: Text(_timerRunning ? 'توقف' : 'شروع تایمر'),
-                ),
+                const Text('🏆', style: TextStyle(fontSize: 100)),
+                const Text('بازی تمام شد!', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 20),
+                Text('کلمه اصلی: ${widget.word}', style: const TextStyle(fontSize: 20)),
+                const SizedBox(height: 20),
+                const Text('جاسوس‌ها:', style: TextStyle(color: AppColors.textSub)),
+                ...widget.roles.asMap().entries.where((e) => e.value).map((e) => Text('🕵️ بازیکن ${e.key + 1}', style: const TextStyle(fontSize: 18, color: AppColors.spyRed))),
+                const SizedBox(height: 40),
+                ElevatedButton(
+                  onPressed: () => Navigator.popUntil(context, (r) => r.isFirst),
+                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.gold, foregroundColor: Colors.black),
+                  child: const Text('بازگشت به خانه'),
+                )
               ],
             ),
           ),
-          const SizedBox(height: 32),
-          const Text('رأی‌گیری',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          const Text('روی کسی که فکر می‌کنید جاسوسه بزنید:',
-              style: TextStyle(color: Colors.white54)),
-          const SizedBox(height: 12),
-          ...widget.players.asMap().entries.map((e) => Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Card(
-                  child: ListTile(
-                    leading: CircleAvatar(child: Text('${e.key + 1}')),
-                    title: Text(e.value),
-                    trailing:
-                        const Icon(Icons.arrow_back_ios_new, size: 16),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => SpyResultScreen(
-                                    players: widget.players,
-                                    spyIndices: widget.spyIndices,
-                                    word: widget.word,
-                                    accused: e.key,
-                                  )));
-                    },
-                  ),
-                ),
-              )),
+          Align(alignment: Alignment.topCenter, child: ConfettiWidget(confettiController: _controller, blastDirectionality: BlastDirectionality.explosive, colors: const [AppColors.gold, AppColors.purple, Colors.white])),
         ],
       ),
     );
   }
 }
 
-// ==================== SPY RESULT ====================
-class SpyResultScreen extends StatelessWidget {
-  final List<String> players;
-  final Set<int> spyIndices;
-  final String word;
-  final int accused;
-  const SpyResultScreen({
-    super.key,
-    required this.players,
-    required this.spyIndices,
-    required this.word,
-    required this.accused,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final accusedIsSpy = spyIndices.contains(accused);
-    return Scaffold(
-      appBar: AppBar(title: const Text('نتیجه')),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(accusedIsSpy ? '✅' : '❌',
-                  style: const TextStyle(fontSize: 80)),
-              const SizedBox(height: 16),
-              Text(
-                accusedIsSpy ? 'درست حدس زدید!' : 'اشتباه بود!',
-                style: const TextStyle(
-                    fontSize: 28, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 24),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      const Text('کلمهٔ اصلی:',
-                          style: TextStyle(color: Colors.white54)),
-                      Text(word,
-                          style: const TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.amber)),
-                      const SizedBox(height: 16),
-                      const Text('جاسوس‌ها:',
-                          style: TextStyle(color: Colors.white54)),
-                      const SizedBox(height: 4),
-                      ...spyIndices.map((i) => Text('🕵️ ${players[i]}',
-                          style: const TextStyle(fontSize: 18))),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 32),
-              FilledButton.icon(
-                onPressed: () =>
-                    Navigator.popUntil(context, (r) => r.isFirst),
-                icon: const Icon(Icons.home),
-                label: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  child: Text('بازی جدید', style: TextStyle(fontSize: 16)),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ==================== PANTOMIME WORDS ====================
-const pantoWords = <String, List<String>>{
-  'افعال': [
-    'دویدن', 'پریدن', 'خندیدن', 'گریه کردن', 'رقصیدن',
-    'آواز خواندن', 'شنا کردن', 'خوابیدن', 'غذا خوردن', 'مسواک زدن'
-  ],
-  'حیوانات': [
-    'شیر', 'فیل', 'میمون', 'پنگوئن', 'خرگوش',
-    'مار', 'عقاب', 'اسب', 'گاو', 'سگ'
-  ],
-  'حرفه‌ها': [
-    'دکتر', 'معلم', 'خلبان', 'آشپز', 'بازیگر',
-    'راننده', 'پلیس', 'نقاش', 'خبرنگار', 'خواننده'
-  ],
-  'اشیا': [
-    'چتر', 'عینک', 'ساعت', 'تلفن', 'صندلی',
-    'ماشین', 'آینه', 'چاقو', 'کتاب', 'توپ'
-  ],
-  'احساسات': [
-    'خوشحال', 'عصبانی', 'خسته', 'ترسیده',
-    'گیج', 'هیجان‌زده', 'ناراحت', 'مغرور'
-  ],
-};
-
-// ==================== PANTO SETUP ====================
+// ==================== PANTOMIME FLOW ====================
 class PantoSetupScreen extends StatefulWidget {
   const PantoSetupScreen({super.key});
   @override
@@ -684,320 +474,155 @@ class PantoSetupScreen extends StatefulWidget {
 }
 
 class _PantoSetupScreenState extends State<PantoSetupScreen> {
-  String _category = 'افعال';
-  int _duration = 60;
-
+  int _time = 60;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('🎭 تنظیم پانتومیم')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          const Text('دستهٔ کلمات',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: pantoWords.keys
-                .map((c) => ChoiceChip(
-                      label: Text(c),
-                      selected: _category == c,
-                      onSelected: (_) => setState(() => _category = c),
-                    ))
-                .toList(),
-          ),
-          const SizedBox(height: 24),
-          const Text('مدت زمان هر دور',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            children: [30, 60, 90, 120]
-                .map((s) => ChoiceChip(
-                      label: Text('$s ثانیه'),
-                      selected: _duration == s,
-                      onSelected: (_) => setState(() => _duration = s),
-                    ))
-                .toList(),
-          ),
-          const SizedBox(height: 32),
-          FilledButton.icon(
-            onPressed: () {
-              final words = List<String>.from(pantoWords[_category]!)
-                ..shuffle();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => PantoGameScreen(
-                            words: words,
-                            duration: _duration,
-                          )));
-            },
-            icon: const Icon(Icons.play_arrow),
-            label: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 12),
-              child: Text('شروع بازی', style: TextStyle(fontSize: 18)),
+      appBar: AppBar(title: const Text('تنظیم پانتومیم'), backgroundColor: Colors.transparent),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(16)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('زمان (ثانیه)'),
+                  Row(
+                    children: [
+                      IconButton(icon: const Icon(Icons.remove, color: AppColors.pantoBlue), onPressed: () => setState(() => _time = max(_time - 30, 30))),
+                      Text('$_time', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      IconButton(icon: const Icon(Icons.add, color: AppColors.pantoBlue), onPressed: () => setState(() => _time += 30)),
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+            const Spacer(),
+            ElevatedButton(
+              onPressed: () {
+                final words = List.from(pantoWords)..shuffle();
+                Navigator.push(context, MaterialPageRoute(builder: (_) => PantoGameScreen(time: _time, words: words)));
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.pantoBlue, minimumSize: const Size(double.infinity, 50)),
+              child: const Text('شروع بازی', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            )
+          ],
+        ),
       ),
     );
   }
 }
 
-// ==================== PANTO GAME ====================
+const pantoWords = ['دویدن', 'شیر', 'دکتر', 'چتر', 'خوشحال', 'رقصیدن', 'فیل', 'آشپز', 'کتاب'];
+
 class PantoGameScreen extends StatefulWidget {
+  final int time;
   final List<String> words;
-  final int duration;
-  const PantoGameScreen(
-      {super.key, required this.words, required this.duration});
+  const PantoGameScreen({super.key, required this.time, required this.words});
   @override
   State<PantoGameScreen> createState() => _PantoGameScreenState();
 }
 
 class _PantoGameScreenState extends State<PantoGameScreen> {
-  late List<String> _words;
+  late int _seconds;
   Timer? _timer;
-  int _seconds = 0;
   int _score = 0;
-  int _skipped = 0;
   int _index = 0;
   bool _started = false;
-  bool _finished = false;
+  bool _gameOver = false;
 
   @override
   void initState() {
     super.initState();
-    _words = List<String>.from(widget.words);
-    _seconds = widget.duration;
+    _seconds = widget.time;
   }
 
   void _start() {
     setState(() => _started = true);
     _timer = Timer.periodic(const Duration(seconds: 1), (t) {
-      if (_seconds <= 1) {
-        t.cancel();
-        setState(() {
-          _seconds = 0;
-          _finished = true;
-        });
-      } else {
-        setState(() => _seconds--);
-      }
-    });
-  }
-
-  void _next({required bool correct}) {
-    setState(() {
-      if (correct) {
-        _score++;
-      } else {
-        _skipped++;
-      }
-      _index++;
-      if (_index >= _words.length) {
-        _words.shuffle();
-        _index = 0;
-      }
+      if (_seconds > 0) { setState(() => _seconds--); }
+      else { t.cancel(); setState(() { _gameOver = true; _started = false; }); }
     });
   }
 
   @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
+  void dispose() { _timer?.cancel(); super.dispose(); }
 
   @override
   Widget build(BuildContext context) {
-    if (!_started) {
+    if (!_started && !_gameOver) {
+      return Scaffold(body: Center(child: ElevatedButton(onPressed: _start, child: const Text('شروع'))));
+    }
+    if (_gameOver) {
       return Scaffold(
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.smart_toy, size: 100, color: Colors.amber),
-              const SizedBox(height: 24),
-              const Text('گوشی را بگیر',
-                  style: TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              Text('${widget.duration} ثانیه فرصت داری',
-                  style: const TextStyle(color: Colors.white54)),
-              const SizedBox(height: 32),
-              FilledButton.icon(
-                onPressed: _start,
-                icon: const Icon(Icons.play_arrow),
-                label: const Padding(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                  child: Text('شروع', style: TextStyle(fontSize: 20)),
-                ),
-              ),
+              const Text('⏰ زمان تمام شد!', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+              Text('امتیاز شما: $_score', style: TextStyle(fontSize: 24, color: AppColors.gold)),
+              const SizedBox(height: 40),
+              ElevatedButton(onPressed: () => Navigator.popUntil(context, (r) => r.isFirst), child: const Text('بازگشت')),
             ],
-          ),
-        ),
-      );
-    }
-
-    if (_finished) {
-      return Scaffold(
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('⏰', style: TextStyle(fontSize: 80)),
-                const Text('زمان تمام شد!',
-                    style: TextStyle(
-                        fontSize: 28, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 24),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Column(children: [
-                          const Text('✅', style: TextStyle(fontSize: 40)),
-                          Text('$_score',
-                              style: const TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green)),
-                          const Text('درست'),
-                        ]),
-                        Column(children: [
-                          const Text('⏭️', style: TextStyle(fontSize: 40)),
-                          Text('$_skipped',
-                              style: const TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.orange)),
-                          const Text('رد شده'),
-                        ]),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 32),
-                FilledButton.icon(
-                  onPressed: () =>
-                      Navigator.popUntil(context, (r) => r.isFirst),
-                  icon: const Icon(Icons.home),
-                  label: const Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                    child: Text('بازی جدید',
-                        style: TextStyle(fontSize: 16)),
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       );
     }
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              _seconds < 10
-                  ? Colors.red.shade900
-                  : const Color(0xFF1565C0),
-              const Color(0xFF0D47A1)
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _pill('$_score', Colors.green, 'درست'),
-                    _pill(_seconds.toString(),
-                        _seconds < 10 ? Colors.red : Colors.amber, 'ثانیه'),
-                    _pill('$_skipped', Colors.orange, 'رد'),
-                  ],
-                ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('امتیاز: $_score', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.gold)),
+                  Text('$_seconds', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: _seconds < 10 ? Colors.red : AppColors.pantoBlue)),
+                ],
               ),
-              Expanded(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Text(
-                      _words[_index],
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          fontSize: 56,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+            ),
+            Expanded(
+              child: Center(
+                child: Text(widget.words[_index], style: GoogleFonts.vazirmatn(fontSize: 56, fontWeight: FontWeight.bold)),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 60,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.grey.shade800),
+                        onPressed: () => setState(() { _index = (_index + 1) % widget.words.length; }),
+                        child: const Text('رد کردن', style: TextStyle(fontSize: 18)),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: SizedBox(
-                        height: 70,
-                        child: FilledButton.icon(
-                          style: FilledButton.styleFrom(
-                              backgroundColor: Colors.orange.shade700),
-                          onPressed: () => _next(correct: false),
-                          icon: const Icon(Icons.skip_next),
-                          label: const Text('رد کن',
-                              style: TextStyle(fontSize: 18)),
-                        ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    flex: 2,
+                    child: SizedBox(
+                      height: 60,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.green.shade700),
+                        onPressed: () => setState(() { _score++; _index = (_index + 1) % widget.words.length; }),
+                        child: const Text('درست بود', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      flex: 2,
-                      child: SizedBox(
-                        height: 70,
-                        child: FilledButton.icon(
-                          style: FilledButton.styleFrom(
-                              backgroundColor: Colors.green.shade700),
-                          onPressed: () => _next(correct: true),
-                          icon: const Icon(Icons.check),
-                          label: const Text('درست',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            )
+          ],
         ),
       ),
-    );
-  }
-
-  Widget _pill(String value, Color color, String label) {
-    return Column(
-      children: [
-        Text(value,
-            style: TextStyle(
-                fontSize: 32, fontWeight: FontWeight.bold, color: color)),
-        Text(label,
-            style:
-                const TextStyle(color: Colors.white70, fontSize: 12)),
-      ],
     );
   }
 }
