@@ -24,20 +24,17 @@ class AppColors {
 class AppSettings {
   static bool soundOn = true;
   static bool vibrationOn = true;
-  static bool darkMode = true;
 
   static Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
     soundOn = prefs.getBool('sound') ?? true;
     vibrationOn = prefs.getBool('vibration') ?? true;
-    darkMode = prefs.getBool('darkMode') ?? true;
   }
 
   static Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('sound', soundOn);
     await prefs.setBool('vibration', vibrationOn);
-    await prefs.setBool('darkMode', darkMode);
   }
 }
 
@@ -52,7 +49,7 @@ class _GamePartyAppState extends State<GamePartyApp> {
   @override
   void initState() {
     super.initState();
-    AppSettings.load().then((_) => setState(() {}));
+    AppSettings.load();
   }
 
   @override
@@ -61,10 +58,10 @@ class _GamePartyAppState extends State<GamePartyApp> {
       title: 'Game Party',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        brightness: AppSettings.darkMode ? Brightness.dark : Brightness.light,
-        scaffoldBackgroundColor: AppSettings.darkMode ? AppColors.bg : Colors.grey[100],
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: AppColors.bg,
         textTheme: GoogleFonts.vazirmatnTextTheme(Theme.of(context).textTheme)
-            .apply(bodyColor: AppSettings.darkMode ? Colors.white : Colors.black),
+            .apply(bodyColor: Colors.white, displayColor: Colors.white),
         useMaterial3: true,
       ),
       builder: (context, child) => Directionality(
@@ -97,24 +94,20 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/6.png'), // پس‌زمینه
+            fit: BoxFit.cover,
+            opacity: 0.6,
+          ),
           gradient: RadialGradient(colors: [Color(0xFF2A1548), AppColors.bg], radius: 1.2),
         ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('👑', style: TextStyle(fontSize: 60)),
-              Text(
-                'Game Party',
-                style: GoogleFonts.vazirmatn(
-                  fontSize: 48, fontWeight: FontWeight.w900, color: AppColors.gold,
-                  shadows: [const Shadow(color: AppColors.gold, blurRadius: 20)],
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text('Play Together • Laugh Together', style: TextStyle(color: AppColors.textSub)),
-              const SizedBox(height: 40),
-              const CircularProgressIndicator(color: AppColors.purple),
+              Image.asset('assets/images/1.png', width: 280), // لوگو
+              const SizedBox(height: 50),
+              const CircularProgressIndicator(color: AppColors.gold),
             ],
           ),
         ),
@@ -123,143 +116,95 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
 
-// ==================== HOME SCREEN (MATCHING UI) ====================
+// ==================== HOME SCREEN (MATCHING UI EXACTLY) ====================
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Top Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.settings, color: AppColors.textSub),
-                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen())),
-                  ),
-                  const CircleAvatar(
-                    backgroundColor: AppColors.cardBg,
-                    child: Icon(Icons.person, color: AppColors.purple),
-                  ),
-                ],
-              ),
-            ),
-            // Logo
-            const SizedBox(height: 10),
-            const Text('👑', style: TextStyle(fontSize: 40)),
-            Text(
-              'Game Party',
-              style: GoogleFonts.vazirmatn(
-                fontSize: 42, fontWeight: FontWeight.w900,
-                foreground: Paint()..shader = const LinearGradient(colors: [AppColors.gold, Colors.orange]).createShader(const Rect.fromLTWH(0, 0, 200, 70)),
-                shadows: [const Shadow(color: Colors.black, blurRadius: 10, offset: Offset(0, 5))],
-              ),
-            ),
-            const SizedBox(height: 30),
-            // Main Cards
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/6.png'), // پس‌زمینه
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Top Bar (Settings and Profile Images)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _NeonCard(
-                      title: 'بازی جاسوس',
-                      subtitle: 'ببین چه کسی جاسوس است!',
-                      emoji: '🕵️‍♂️',
-                      color: AppColors.spyRed,
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SpySetupScreen())),
+                    GestureDetector(
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen())),
+                      child: Image.asset('assets/images/4.png', width: 50), // چرخ‌دنده
                     ),
-                    const SizedBox(height: 20),
-                    _NeonCard(
-                      title: 'بازی پانتومیم',
-                      subtitle: 'بدون حرف زدن، کلمه را اجرا کن!',
-                      emoji: '🎭',
-                      color: AppColors.pantoBlue,
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PantoSetupScreen())),
-                    ),
-                    const SizedBox(height: 20),
+                    Image.asset('assets/images/5.png', width: 50), // پروفایل
                   ],
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 10),
+              
+              // Logo Image
+              Image.asset('assets/images/1.png', width: 300), // لوگو
+              
+              const SizedBox(height: 30),
+              
+              // Main Cards (Touchable Images)
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: [
+                      _ImageCard(
+                        imagePath: 'assets/images/2.png', // کارت جاسوس
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SpySetupScreen())),
+                      ),
+                      const SizedBox(height: 20),
+                      _ImageCard(
+                        imagePath: 'assets/images/3.png', // کارت پانتومیم
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PantoSetupScreen())),
+                      ),
+                      const SizedBox(height: 30),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _NeonCard extends StatelessWidget {
-  final String title, subtitle, emoji;
-  final Color color;
+class _ImageCard extends StatelessWidget {
+  final String imagePath;
   final VoidCallback onTap;
-
-  const _NeonCard({required this.title, required this.subtitle, required this.emoji, required this.color, required this.onTap});
+  const _ImageCard({required this.imagePath, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 200,
         decoration: BoxDecoration(
-          color: AppColors.cardBg,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: color.withOpacity(0.6), width: 2),
           boxShadow: [
-            BoxShadow(color: color.withOpacity(0.3), blurRadius: 25, spreadRadius: 2, offset: const Offset(0, 5))
+            BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 15, offset: const Offset(0, 8))
           ],
         ),
-        child: Stack(
-          children: [
-            // Background Image Placeholder
-            Positioned(
-              left: -20, bottom: -20,
-              child: Opacity(opacity: 0.3, child: Text(emoji, style: const TextStyle(fontSize: 150))),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(title, style: GoogleFonts.vazirmatn(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
-                      const SizedBox(height: 8),
-                      Text(subtitle, style: const TextStyle(color: AppColors.textSub, fontSize: 16)),
-                    ],
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: color,
-                        borderRadius: BorderRadius.circular(30),
-                        boxShadow: [BoxShadow(color: color.withOpacity(0.5), blurRadius: 10)],
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.play_arrow, color: Colors.white),
-                          SizedBox(width: 8),
-                          Text('شروع بازی', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ],
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: Image.asset(
+            imagePath,
+            width: double.infinity,
+            fit: BoxFit.fitWidth,
+          ),
         ),
       ),
     );
@@ -576,7 +521,7 @@ class _SpyResultScreenState extends State<SpyResultScreen> {
   }
 }
 
-// ==================== PANTOMIME FLOW (ADVANCED) ====================
+// ==================== PANTOMIME FLOW ====================
 class PantoSetupScreen extends StatefulWidget {
   const PantoSetupScreen({super.key});
   @override
@@ -597,7 +542,6 @@ class _PantoSetupScreenState extends State<PantoSetupScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Mode Selection
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(16)),
@@ -624,7 +568,6 @@ class _PantoSetupScreenState extends State<PantoSetupScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            // Category Selection
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(16)),
@@ -647,7 +590,6 @@ class _PantoSetupScreenState extends State<PantoSetupScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            // Time Selection
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(16)),
@@ -705,10 +647,9 @@ class _PantoGameScreenState extends State<PantoGameScreen> {
   late int _seconds;
   Timer? _timer;
   
-  // Game State
   int _teamA_Score = 0;
   int _teamB_Score = 0;
-  int _currentTeam = 0; // 0 = Team A, 1 = Team B
+  int _currentTeam = 0;
   int _index = 0;
   
   bool _started = false;
@@ -762,13 +703,14 @@ class _PantoGameScreenState extends State<PantoGameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Start Screen
     if (!_started && !_roundOver && !_gameOver) {
       return Scaffold(
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Image.asset('assets/images/7.png', width: 150), // تصویر ماسک‌ها
+              const SizedBox(height: 20),
               Text(
                 widget.isTeamMode ? (_currentTeam == 0 ? 'نوبت تیم قرمز 🔴' : 'نوبت تیم آبی 🔵') : 'آماده‌ای؟',
                 style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
@@ -787,7 +729,6 @@ class _PantoGameScreenState extends State<PantoGameScreen> {
       );
     }
 
-    // Round Over Screen
     if (_roundOver) {
       return Scaffold(
         body: Center(
@@ -809,7 +750,6 @@ class _PantoGameScreenState extends State<PantoGameScreen> {
       );
     }
 
-    // Game Over Screen
     if (_gameOver) {
       bool isDraw = _teamA_Score == _teamB_Score;
       String winner = _teamA_Score > _teamB_Score ? 'تیم قرمز 🔴' : 'تیم آبی 🔵';
@@ -834,7 +774,6 @@ class _PantoGameScreenState extends State<PantoGameScreen> {
       );
     }
 
-    // Active Game Screen
     return Scaffold(
       body: SafeArea(
         child: Column(
