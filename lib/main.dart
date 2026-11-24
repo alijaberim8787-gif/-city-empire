@@ -390,7 +390,17 @@ class _SpySetupScreenState extends State<SpySetupScreen> {
           const SizedBox(height: 20),
           const Text('دسته‌بندی', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.spyRed)),
           const SizedBox(height: 10),
-          Wrap(spacing: 8, runSpacing: 8, children: spyData.keys.map((c) => ChoiceChip(label: Text(c), selected: _category == c, onSelected: (v) => setState(() => _category = v))).toList()),
+          Wrap(
+            spacing: 8, 
+            runSpacing: 8, 
+            children: spyData.keys.map((c) => ChoiceChip(
+              label: Text(c), 
+              selected: _category == c, 
+              onSelected: (bool selected) {
+                if (selected) setState(() => _category = c);
+              }
+            )).toList()
+          ),
           const SizedBox(height: 40),
           ElevatedButton(
             onPressed: () {
@@ -617,7 +627,12 @@ class _PantoSetupScreenState extends State<PantoSetupScreen> {
                     avatar: Icon(m.icon, size: 18, color: _mode == m ? Colors.white : m.color),
                     selected: _mode == m,
                     selectedColor: m.color,
-                    onSelected: (v) { AppSettings.vibrate(); setState(() => _mode = m); },
+                    onSelected: (bool selected) {
+                      if (selected) {
+                        AppSettings.vibrate(); 
+                        setState(() => _mode = m);
+                      }
+                    },
                   )).toList(),
                 ),
               ),
