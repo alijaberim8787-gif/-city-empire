@@ -247,7 +247,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const ListTile(
             leading: Icon(Icons.info_outline, color: AppColors.textSub),
             title: Text('درباره گیم پارتی'),
-            subtitle: Text('نسخه 2.1.0 - آپدیت بزرگ بازی‌ها', style: TextStyle(color: AppColors.textSub)),
+            subtitle: Text('نسخه 2.2.0 - پانتومیم نوبت‌محور', style: TextStyle(color: AppColors.textSub)),
           ),
         ],
       ),
@@ -454,7 +454,6 @@ class SpyTimerScreen extends StatefulWidget {
 class _SpyTimerScreenState extends State<SpyTimerScreen> {
   late int _seconds;
   Timer? _timer;
-  bool _isRunning = true;
 
   @override
   void initState() {
@@ -644,42 +643,37 @@ class _SpyResultScreenState extends State<SpyResultScreen> {
 
 // ==================== PANTOMIME DATA ====================
 const pantoData = {
-  'عمومی': [
+  'عمومی (ساده)': [
     {'word': 'دویدن', 'diff': 1}, {'word': 'شیر', 'diff': 1}, {'word': 'دکتر', 'diff': 1},
-    {'word': 'چتر', 'diff': 2}, {'word': 'خوشحال', 'diff': 2}, {'word': 'رقصیدن', 'diff': 2},
-    {'word': 'فیل', 'diff': 3}, {'word': 'آشپز', 'diff': 3}, {'word': 'کتاب', 'diff': 3},
+    {'word': 'چتر', 'diff': 1}, {'word': 'خوشحال', 'diff': 1}, {'word': 'رقصیدن', 'diff': 1},
   ],
   'فیلم و سریال': [
-    {'word': 'شرک', 'diff': 1}, {'word': 'آواتار', 'diff': 2}, {'word': 'تایتانیک', 'diff': 2},
-    {'word': 'ماتریکس', 'diff': 3}, {'word': 'شیر شاه', 'diff': 3}, {'word': 'هری پاتر', 'diff': 3},
+    {'word': 'شرک', 'diff': 2}, {'word': 'آواتار', 'diff': 2}, {'word': 'تایتانیک', 'diff': 2},
+    {'word': 'ماتریکس', 'diff': 2}, {'word': 'شیر شاه', 'diff': 2}, {'word': 'هری پاتر', 'diff': 2},
   ],
-  'ضرب‌المثل‌ها': [
-    {'word': 'آب در هاون کوبیدن', 'diff': 3}, {'word': 'دست و پا چلفتی', 'diff': 1}, 
-    {'word': 'خون به جگر شدن', 'diff': 2}, {'word': 'چشم و همچشمی', 'diff': 2},
+  'ضرب‌المثل‌ها (سخت)': [
+    {'word': 'آب در هاون کوبیدن', 'diff': 3}, {'word': 'دست و پا چلفتی', 'diff': 3}, 
+    {'word': 'خون به جگر شدن', 'diff': 3}, {'word': 'چشم و همچشمی', 'diff': 3},
   ],
   'سلبریتی‌ها': [
-    {'word': 'مهران مدیری', 'diff': 2}, {'word': 'عادل فردوسی‌پور', 'diff': 1}, 
-    {'word': 'جواد خیابانی', 'diff': 2}, {'word': 'نوید محمدزاده', 'diff': 3},
+    {'word': 'مهران مدیری', 'diff': 2}, {'word': 'عادل فردوسی‌پور', 'diff': 2}, 
+    {'word': 'جواد خیابانی', 'diff': 2}, {'word': 'نوید محمدزاده', 'diff': 2},
   ],
   'حیوانات': [
-    {'word': 'پنگوئن', 'diff': 1}, {'word': 'زرافه', 'diff': 1}, {'word': 'کانگورو', 'diff': 2},
-    {'word': 'هشت‌پا', 'diff': 2}, {'word': 'خفاش', 'diff': 3}, {'word': 'آفتاب‌پرست', 'diff': 3},
+    {'word': 'پنگوئن', 'diff': 1}, {'word': 'زرافه', 'diff': 1}, {'word': 'کانگورو', 'diff': 1},
+    {'word': 'هشت‌پا', 'diff': 2}, {'word': 'خفاش', 'diff': 2}, {'word': 'آفتاب‌پرست', 'diff': 2},
   ],
   'ورزش': [
-    {'word': 'فوتبال', 'diff': 1}, {'word': 'شنا', 'diff': 1}, {'word': 'والیبال', 'diff': 2},
-    {'word': 'بسکتبال', 'diff': 2}, {'word': 'شطرنج', 'diff': 3}, {'word': 'کاراته', 'diff': 3},
+    {'word': 'فوتبال', 'diff': 1}, {'word': 'شنا', 'diff': 1}, {'word': 'والیبال', 'diff': 1},
+    {'word': 'بسکتبال', 'diff': 2}, {'word': 'شطرنج', 'diff': 2}, {'word': 'کاراته', 'diff': 2},
   ],
   'مشاغل': [
     {'word': 'پلیس', 'diff': 1}, {'word': 'معلم', 'diff': 1}, {'word': 'خلبان', 'diff': 2},
-    {'word': 'نقاش', 'diff': 2}, {'word': 'آتش‌نشان', 'diff': 3}, {'word': 'بازیگر', 'diff': 3},
-  ],
-  'احساسات': [
-    {'word': 'عصبانی', 'diff': 1}, {'word': 'خسته', 'diff': 1}, {'word': 'ترسیده', 'diff': 2},
-    {'word': 'عاشق', 'diff': 2}, {'word': 'مغرور', 'diff': 3}, {'word': 'حسود', 'diff': 3},
+    {'word': 'نقاش', 'diff': 2}, {'word': 'آتش‌نشان', 'diff': 2}, {'word': 'بازیگر', 'diff': 3},
   ],
 };
 
-// ==================== PANTOMIME FLOW ====================
+// ==================== PANTOMIME FLOW (NEW TURN-BASED) ====================
 class PantoSetupScreen extends StatefulWidget {
   const PantoSetupScreen({super.key});
   @override
@@ -687,8 +681,8 @@ class PantoSetupScreen extends StatefulWidget {
 }
 
 class _PantoSetupScreenState extends State<PantoSetupScreen> {
-  int _time = 60;
-  String _category = 'عمومی';
+  int _totalTurns = 10;
+  String _category = 'عمومی (ساده)';
   bool _isTeamMode = true;
   final TextEditingController _teamACtrl = TextEditingController(text: 'تیم قرمز');
   final TextEditingController _teamBCtrl = TextEditingController(text: 'تیم آبی');
@@ -737,6 +731,25 @@ class _PantoSetupScreenState extends State<PantoSetupScreen> {
               ),
             ],
             const SizedBox(height: 16),
+            // Total Turns selection
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(16)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('تعداد کل دست‌ها', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Row(
+                    children: [
+                      IconButton(icon: const Icon(Icons.remove_circle_outline, color: AppColors.pantoBlue), onPressed: () => setState(() => _totalTurns = max(_totalTurns - 2, 2))),
+                      Text('$_totalTurns', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      IconButton(icon: const Icon(Icons.add_circle_outline, color: AppColors.pantoBlue), onPressed: () => setState(() => _totalTurns += 2)),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(16)),
@@ -754,32 +767,17 @@ class _PantoSetupScreenState extends State<PantoSetupScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(16)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('زمان (ثانیه)', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  Row(
-                    children: [
-                      IconButton(icon: const Icon(Icons.remove, color: AppColors.pantoBlue), onPressed: () => setState(() => _time = max(_time - 30, 30))),
-                      Text('$_time', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                      IconButton(icon: const Icon(Icons.add, color: AppColors.pantoBlue), onPressed: () => setState(() => _time += 30)),
-                    ],
-                  )
-                ],
-              ),
-            ),
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
                 final words = List<Map<String, dynamic>>.from(pantoData[_category]!)..shuffle();
                 Navigator.push(context, MaterialPageRoute(builder: (_) => PantoGameScreen(
-                  time: _time, words: words, isTeamMode: _isTeamMode,
+                  totalTurns: _totalTurns, 
+                  words: words, 
+                  isTeamMode: _isTeamMode,
                   teamAName: _teamACtrl.text.isEmpty ? 'تیم قرمز' : _teamACtrl.text,
                   teamBName: _teamBCtrl.text.isEmpty ? 'تیم آبی' : _teamBCtrl.text,
+                  category: _category,
                 )));
               },
               style: ElevatedButton.styleFrom(backgroundColor: AppColors.pantoBlue, minimumSize: const Size(double.infinity, 55)),
@@ -793,52 +791,58 @@ class _PantoSetupScreenState extends State<PantoSetupScreen> {
 }
 
 class PantoGameScreen extends StatefulWidget {
-  final int time;
+  final int totalTurns;
   final List<Map<String, dynamic>> words;
   final bool isTeamMode;
-  final String teamAName, teamBName;
+  final String teamAName, teamBName, category;
 
-  const PantoGameScreen({super.key, required this.time, required this.words, required this.isTeamMode, required this.teamAName, required this.teamBName});
+  const PantoGameScreen({super.key, required this.totalTurns, required this.words, required this.isTeamMode, required this.teamAName, required this.teamBName, required this.category});
 
   @override
   State<PantoGameScreen> createState() => _PantoGameScreenState();
 }
 
 class _PantoGameScreenState extends State<PantoGameScreen> {
-  late int _seconds;
-  Timer? _timer;
-  
+  // Game State
+  int _currentTurn = 1;
   int _teamA_Score = 0;
   int _teamB_Score = 0;
-  int _currentTeam = 0;
-  int _index = 0;
+  int _currentTeam = 0; // 0 = Team A, 1 = Team B
+  int _wordIndex = 0;
   
-  bool _started = false;
-  bool _roundOver = false;
+  // Turn State
+  bool _wordRevealed = false;
   bool _gameOver = false;
+  
+  // Timer State
+  late int _seconds;
+  Timer? _timer;
+  final int _maxSeconds = 60; // 60 seconds per turn
 
   @override
-  void initState() { super.initState(); _seconds = widget.time; }
+  void initState() {
+    super.initState();
+    _seconds = _maxSeconds;
+  }
 
-  void _startRound() {
-    setState(() { _started = true; _roundOver = false; _seconds = widget.time; });
+  @override
+  void dispose() { _timer?.cancel(); super.dispose(); }
+
+  void _startTurn() {
+    setState(() { _wordRevealed = true; _seconds = _maxSeconds; });
     _timer = Timer.periodic(const Duration(seconds: 1), (t) {
       if (_seconds > 0) { setState(() => _seconds--); }
       else { 
         t.cancel(); 
-        setState(() { _roundOver = true; _started = false; }); 
+        _endTurn(points: 0, success: false); // Time's up
       }
     });
   }
 
-  void _endRoundEarly() {
+  void _endTurn({required int points, required bool success}) {
     _timer?.cancel();
-    setState(() { _roundOver = true; _started = false; });
-  }
-
-  void _nextWord({required bool correct}) {
-    if (correct) {
-      int points = widget.words[_index]['diff'];
+    
+    if (success) {
       setState(() {
         if (widget.isTeamMode) {
           if (_currentTeam == 0) _teamA_Score += points; else _teamB_Score += points;
@@ -847,73 +851,23 @@ class _PantoGameScreenState extends State<PantoGameScreen> {
         }
       });
     }
-    setState(() { _index = (_index + 1) % widget.words.length; });
-  }
 
-  void _nextTurn() {
-    if (widget.isTeamMode) {
-      if (_currentTeam == 0) {
-        setState(() { _currentTeam = 1; _roundOver = false; });
-      } else {
-        setState(() { _gameOver = true; });
-      }
+    // Next Turn Logic
+    if (_currentTurn >= widget.totalTurns) {
+      setState(() => _gameOver = true);
     } else {
-      setState(() { _gameOver = true; });
+      setState(() {
+        _currentTurn++;
+        _currentTeam = _currentTeam == 0 ? 1 : 0; // Swap teams
+        _wordRevealed = false;
+        _seconds = _maxSeconds;
+        _wordIndex = (_wordIndex + 1) % widget.words.length;
+      });
     }
   }
-
-  @override
-  void dispose() { _timer?.cancel(); super.dispose(); }
 
   @override
   Widget build(BuildContext context) {
-    if (!_started && !_roundOver && !_gameOver) {
-      return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('assets/images/7.png', width: 150),
-              const SizedBox(height: 20),
-              Text(
-                widget.isTeamMode ? (_currentTeam == 0 ? 'نوبت ${widget.teamAName} 🔴' : 'نوبت ${widget.teamBName} 🔵') : 'آماده‌ای؟',
-                style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              const Text('گوشی را به اجراکننده بدهید و دکمه شروع را بزنید.', style: TextStyle(color: AppColors.textSub)),
-              const SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: _startRound, 
-                style: ElevatedButton.styleFrom(backgroundColor: AppColors.pantoBlue, padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 16)),
-                child: const Text('شروع', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    if (_roundOver) {
-      return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('⏰ زمان تمام شد!', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 20),
-              Text('امتیاز تیم شما: ${_currentTeam == 0 ? _teamA_Score : _teamB_Score}', style: const TextStyle(fontSize: 24, color: AppColors.gold)),
-              const SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: _nextTurn, 
-                style: ElevatedButton.styleFrom(backgroundColor: AppColors.purple, padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15)),
-                child: Text(widget.isTeamMode && _currentTeam == 0 ? 'نوبت تیم بعدی' : 'دیدن نتیجه نهایی', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
     if (_gameOver) {
       bool isDraw = _teamA_Score == _teamB_Score;
       String winner = _teamA_Score > _teamB_Score ? widget.teamAName : widget.teamBName;
@@ -924,18 +878,27 @@ class _PantoGameScreenState extends State<PantoGameScreen> {
             children: [
               const Text('🏆', style: TextStyle(fontSize: 100)),
               Text(isDraw ? 'مساوی شد!' : '$winner برنده شد!', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 20),
-              if (widget.isTeamMode) ...[
-                Text('${widget.teamAName}: $_teamA_Score', style: const TextStyle(fontSize: 20, color: AppColors.spyRed)),
-                Text('${widget.teamBName}: $_teamB_Score', style: const TextStyle(fontSize: 20, color: AppColors.pantoBlue)),
-              ] else ...[
-                Text('امتیاز شما: $_teamA_Score', style: const TextStyle(fontSize: 20, color: AppColors.gold)),
-              ],
+              const SizedBox(height: 30),
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(20)),
+                child: Column(
+                  children: [
+                    if (widget.isTeamMode) ...[
+                      Text('${widget.teamAName}: $_teamA_Score', style: const TextStyle(fontSize: 22, color: AppColors.spyRed, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 10),
+                      Text('${widget.teamBName}: $_teamB_Score', style: const TextStyle(fontSize: 22, color: AppColors.pantoBlue, fontWeight: FontWeight.bold)),
+                    ] else ...[
+                      Text('امتیاز شما: $_teamA_Score', style: const TextStyle(fontSize: 22, color: AppColors.gold, fontWeight: FontWeight.bold)),
+                    ],
+                  ],
+                ),
+              ),
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: () => Navigator.popUntil(context, (r) => r.isFirst), 
-                style: ElevatedButton.styleFrom(backgroundColor: AppColors.gold, foregroundColor: Colors.black),
-                child: const Text('بازگشت به خانه', style: TextStyle(fontWeight: FontWeight.bold)),
+                style: ElevatedButton.styleFrom(backgroundColor: AppColors.gold, foregroundColor: Colors.black, minimumSize: const Size(200, 50)),
+                child: const Text('بازگشت به خانه', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               ),
             ],
           ),
@@ -943,102 +906,179 @@ class _PantoGameScreenState extends State<PantoGameScreen> {
       );
     }
 
-    int currentDifficulty = widget.words[_index]['diff'];
-    String currentWord = widget.words[_index]['word'];
+    int currentDifficulty = widget.words[_wordIndex]['diff'];
+    String currentWord = widget.words[_wordIndex]['word'];
+    // Base points: 10 per difficulty star
+    int basePoints = currentDifficulty * 10;
 
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
+            // Top Bar (Scores and Turn)
             Padding(
               padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
                 children: [
-                  Text(
-                    widget.isTeamMode ? (_currentTeam == 0 ? '${widget.teamAName} 🔴' : '${widget.teamBName} 🔵') : 'امتیاز: $_teamA_Score', 
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _currentTeam == 0 ? AppColors.spyRed : AppColors.pantoBlue)
-                  ),
-                  InkWell(
-                    onTap: _endRoundEarly,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(color: Colors.red.shade900, borderRadius: BorderRadius.circular(10)),
-                      child: Text('$_seconds', style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white)),
-                    ),
-                  ),
+                  Text('دست $_currentTurn از ${widget.totalTurns}', style: const TextStyle(color: AppColors.textSub, fontSize: 16)),
+                  const SizedBox(height: 10),
+                  if (widget.isTeamMode) Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildScoreCard(widget.teamAName, _teamA_Score, AppColors.spyRed, _currentTeam == 0),
+                      _buildScoreCard(widget.teamBName, _teamB_Score, AppColors.pantoBlue, _currentTeam == 1),
+                    ],
+                  ) else
+                    Text('امتیاز: $_teamA_Score', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.gold)),
                 ],
               ),
             ),
+            
+            const Divider(color: AppColors.cardBg),
+            
             Expanded(
               child: Center(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  transitionBuilder: (Widget child, Animation<double> animation) {
-                    return ScaleTransition(scale: animation, child: child);
-                  },
-                  child: Column(
-                    key: ValueKey(currentWord),
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
+                child: !_wordRevealed
+                    ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(3, (i) => Icon(
-                          Icons.star, 
-                          color: i < currentDifficulty ? AppColors.gold : Colors.grey.shade800,
-                          size: 30,
-                        )),
+                        children: [
+                          Image.asset('assets/images/7.png', width: 120),
+                          const SizedBox(height: 20),
+                          Text(
+                            widget.isTeamMode ? 'گوشی را به ${_currentTeam == 0 ? widget.teamAName : widget.teamBName} بدهید' : 'گوشی را به اجراکننده بدهید',
+                            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 40),
+                          ElevatedButton.icon(
+                            onPressed: _startTurn,
+                            icon: const Icon(Icons.play_arrow),
+                            label: const Text('نمایش کلمه', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                            style: ElevatedButton.styleFrom(backgroundColor: AppColors.purple, padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16)),
+                          )
+                        ],
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Timer
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              SizedBox(
+                                width: 120, height: 120,
+                                child: CircularProgressIndicator(
+                                  value: _seconds / _maxSeconds,
+                                  strokeWidth: 8,
+                                  backgroundColor: AppColors.cardBg,
+                                  valueColor: AlwaysStoppedAnimation<Color>(_seconds < 10 ? Colors.red : AppColors.pantoBlue),
+                                ),
+                              ),
+                              Text('$_seconds', style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          const SizedBox(height: 30),
+                          
+                          // Difficulty Stars
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(3, (i) => Icon(
+                              Icons.star, 
+                              color: i < currentDifficulty ? AppColors.gold : Colors.grey.shade800,
+                              size: 30,
+                            )),
+                          ),
+                          const SizedBox(height: 15),
+                          
+                          // The Single Word
+                          AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 300),
+                            child: Text(
+                              currentWord,
+                              key: ValueKey(currentWord),
+                              style: GoogleFonts.vazirmatn(fontSize: 56, fontWeight: FontWeight.bold, color: Colors.white),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text('ارزش پایه: $basePoints امتیاز + پاداش سرعت', style: const TextStyle(color: AppColors.textSub)),
+                        ],
                       ),
-                      const SizedBox(height: 20),
-                      Text(currentWord, style: GoogleFonts.vazirmatn(fontSize: 56, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 80,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.grey.shade800, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                        onPressed: () => _nextWord(correct: false),
-                        child: const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.close, color: Colors.red),
-                            Text('رد کردن', style: TextStyle(fontSize: 16)),
-                          ],
+            
+            // Action Buttons (Only visible when word is revealed)
+            if (_wordRevealed)
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 80,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey.shade800, 
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
+                          ),
+                          onPressed: () => _endTurn(points: 0, success: false),
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.close, color: Colors.red),
+                              Text('نتونست (صفر)', style: TextStyle(fontSize: 16)),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    flex: 2,
-                    child: SizedBox(
-                      height: 80,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(backgroundColor: AppColors.green, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                        onPressed: () => _nextWord(correct: true),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.check, color: Colors.white),
-                            Text('درست بود (+$currentDifficulty)', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                          ],
+                    const SizedBox(width: 16),
+                    Expanded(
+                      flex: 2,
+                      child: SizedBox(
+                        height: 80,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.green, 
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
+                          ),
+                          onPressed: () {
+                            // Points = Base Points + Seconds Remaining
+                            int totalPoints = basePoints + _seconds;
+                            _endTurn(points: totalPoints, success: true);
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.check, color: Colors.white),
+                              Text('درست حدس زد! (+${basePoints + _seconds})', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            )
+                  ],
+                ),
+              )
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildScoreCard(String name, int score, Color color, bool isActive) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(
+        color: isActive ? color.withOpacity(0.2) : Colors.transparent,
+        border: Border.all(color: isActive ? color : Colors.transparent, width: 2),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Column(
+        children: [
+          Text(name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isActive ? color : AppColors.textSub)),
+          Text('$score', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: isActive ? Colors.white : AppColors.textSub)),
+        ],
       ),
     );
   }
