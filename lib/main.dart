@@ -294,7 +294,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const ListTile(
             leading: Icon(Icons.info_outline, color: AppColors.textSub),
             title: Text('درباره گیم پارتی'),
-            subtitle: Text('نسخه 3.0.0 - آپدیت نهایی', style: TextStyle(color: AppColors.textSub)),
+            subtitle: Text('نسخه 4.0.0 - آپدیت دیتابیس کلمات', style: TextStyle(color: AppColors.textSub)),
           ),
         ],
       ),
@@ -302,36 +302,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 }
 
-// ==================== DATA MODELS ====================
+// ==================== DATA MODELS & DATABASE ====================
 class PantoWord {
   final String word;
   final int diff;
   const PantoWord(this.word, this.diff);
 }
 
-// ==================== CATEGORIES DATA ====================
+// 10 Spy Categories
 const spyData = {
-  'مکان‌ها': ['بیمارستان', 'فرودگاه', 'دانشگاه', 'رستوران', 'پارک', 'کافه', 'سینما', 'کتابخانه', 'بانک', 'هتل'],
-  'سفر و طبیعت': ['کوه', 'جنگل', 'ساحل', 'بیابان', 'جزیره', 'دریاچه', 'تونل', 'ایستگاه قطار', 'کشتی', 'قطار'],
-  'غذا': ['پیتزا', 'کباب', 'قورمه سبزی', 'آش رشته', 'فسنجان', 'املت', 'سالاد', 'سوشی', 'برگر', 'ماکارونی'],
-  'حیوانات': ['شیر', 'فیل', 'زرافه', 'پنگوئن', 'دلفین', 'طوطی', 'کوالا', 'گربه', 'خرس', 'کبوتر'],
-  'مشاغل': ['دکتر', 'معلم', 'خلبان', 'آشپز', 'بازیگر', 'راننده', 'پلیس', 'نقاش', 'خبرنگار', 'خواننده'],
-  'اشیاء': ['چتر', 'عینک', 'ساعت', 'کیف', 'لپ‌تاپ', 'صندلی', 'ماشین', 'آینه', 'چاقو', 'کلید'],
-  'فیلم و سریال': ['تایتانیک', 'آواتار', 'ماتریکس', 'شرک', 'شیر شاه', 'هری پاتر', 'فروزن', 'جوراسیک پارک'],
-  'ورزش‌ها': ['فوتبال', 'والیبال', 'بسکتبال', 'شنا', 'شطرنج', 'کاراته', 'تنیس', 'کوهنوردی'],
+  'مکان‌ها': ['بیمارستان', 'فرودگاه', 'دانشگاه', 'رستوران', 'پارک', 'کافه', 'سینما', 'کتابخانه', 'بانک', 'هتل', 'موزه', 'بازار', 'زندان', 'مدرسه', 'پارکینگ', 'پمپ بنزین', 'داروخانه', 'باشگاه ورزشی', 'استادیوم', 'تئاتر'],
+  'سفر': ['کوه', 'جنگل', 'ساحل', 'بیابان', 'جزیره', 'دریاچه', 'تونل', 'ایستگاه قطار', 'کشتی', 'قطار', 'هواپیما', 'اتوبوس', 'متریو', 'تاکسی', 'دوچرخه', 'کوله‌پشتی', 'چادر', 'نقشه', 'قطب‌نما', 'بلیط'],
+  'غذا': ['پیتزا', 'کباب', 'قورمه سبزی', 'آش رشته', 'فسنجان', 'املت', 'سالاد', 'سوشی', 'برگر', 'ماکارونی', 'جوجه کباب', 'قیمه', 'عدس پلو', 'زرشک پلو', 'باقالی پلو', 'دلمه', 'کوکو', 'کشک بادمجان', 'میگو', 'ماهی'],
+  'حیوانات': ['شیر', 'فیل', 'زرافه', 'پنگوئن', 'دلفین', 'طوطی', 'کوالا', 'گربه', 'خرس', 'کبوتر', 'ببر', 'پلنگ', 'گرگ', 'روباه', 'اسب', 'گاو', 'گوسفند', 'مرغ', 'اردک', 'عقاب'],
+  'مشاغل': ['دکتر', 'معلم', 'خلبان', 'آشپز', 'بازیگر', 'راننده', 'پلیس', 'نقاش', 'خبرنگار', 'خواننده', 'مهندس', 'وکیل', 'پرستار', 'آتش‌نشان', 'نجار', 'بنا', 'خیاط', 'آرایشگر', 'عکاس', 'کشاورز'],
+  'اشیاء': ['چتر', 'عینک', 'ساعت', 'کیف', 'لپ‌تاپ', 'صندلی', 'ماشین', 'آینه', 'چاقو', 'کلید', 'تلفن', 'دفتر', 'مداد', 'کتاب', 'توپ', 'پنجره', 'در', 'دیوار', 'فرش', 'لامپ'],
+  'فیلم': ['تایتانیک', 'آواتار', 'ماتریکس', 'شرک', 'شیر شاه', 'هری پاتر', 'فروزن', 'جوراسیک پارک', 'انتقام‌جویان', 'بتمن', 'سوپرمن', 'مرد عنکبوتی', 'دزدان دریایی', 'جنگ ستارگان', 'ارباب حلقه‌ها', 'هالک', 'آیرون من', 'مرد مورچه‌ای', 'پاندای کونگ‌فوکار', 'ماداگاسکار'],
+  'ورزش': ['فوتبال', 'والیبال', 'بسکتبال', 'شنا', 'شطرنج', 'کاراته', 'تنیس', 'کوهنوردی', 'بوکس', 'کشتی', 'ژیمناستیک', 'دوچرخه‌سواری', 'اسکی', 'اسکیت', 'گلف', 'بیسبال', 'هاکی', 'بولینگ', 'تیراندازی', 'شمشیربازی'],
+  'احساسات': ['عصبانی', 'خسته', 'ترسیده', 'عاشق', 'مغرور', 'حسود', 'خوشحال', 'غمگین', 'هیجان‌زده', 'نگران', 'شگفت‌زده', 'آرام', 'بی‌حوصله', 'دلواپس', 'شرمنده', 'مضطرب', 'امیدوار', 'ناامید', 'متعجب', 'راضی'],
+  'تکنولوژی': ['کامپیوتر', 'موبایل', 'تبلت', 'هدفون', 'دوربین', 'پرینتر', 'مودم', 'فلش', 'هارد', 'کیبورد', 'ماوس', 'مانیتور', 'باتری', 'شارژر', 'رام', 'سی‌پی‌یو', 'کارت گرافیک', 'بلندگو', 'میکروفون', 'ساعت هوشمند'],
 };
 
+// 10 Pantomime Categories
 const pantoData = {
-  'عمومی': [PantoWord('دویدن', 1), PantoWord('شیر', 1), PantoWord('دکتر', 1), PantoWord('چتر', 1), PantoWord('خوشحال', 2), PantoWord('رقصیدن', 2)],
-  'فیلم و سریال': [PantoWord('شرک', 2), PantoWord('آواتار', 2), PantoWord('تایتانیک', 2), PantoWord('ماتریکس', 3), PantoWord('شیر شاه', 3), PantoWord('هری پاتر', 3)],
-  'ضرب‌المثل‌ها': [PantoWord('آب در هاون کوبیدن', 3), PantoWord('دست و پا چلفتی', 3), PantoWord('خون به جگر شدن', 3), PantoWord('چشم و همچشمی', 3)],
-  'سلبریتی‌ها': [PantoWord('مهران مدیری', 2), PantoWord('عادل فردوسی‌پور', 2), PantoWord('جواد خیابانی', 2), PantoWord('نوید محمدزاده', 3)],
-  'حیوانات': [PantoWord('پنگوئن', 1), PantoWord('زرافه', 1), PantoWord('کانگورو', 2), PantoWord('هشت‌پا', 2), PantoWord('خفاش', 3), PantoWord('آفتاب‌پرست', 3)],
-  'ورزش': [PantoWord('فوتبال', 1), PantoWord('شنا', 1), PantoWord('والیبال', 2), PantoWord('بسکتبال', 2), PantoWord('شطرنج', 3), PantoWord('کاراته', 3)],
-  'مشاغل': [PantoWord('پلیس', 1), PantoWord('معلم', 1), PantoWord('خلبان', 2), PantoWord('نقاش', 2), PantoWord('آتش‌نشان', 3), PantoWord('بازیگر', 3)],
-  'احساسات': [PantoWord('عصبانی', 1), PantoWord('خسته', 1), PantoWord('ترسیده', 2), PantoWord('عاشق', 2), PantoWord('مغرور', 3), PantoWord('حسود', 3)],
-  'اشیاء': [PantoWord('چتر', 1), PantoWord('عینک', 1), PantoWord('ساعت', 2), PantoWord('کیف', 2), PantoWord('لپ‌تاپ', 3), PantoWord('آینه', 3)],
-  'غذا': [PantoWord('پیتزا', 1), PantoWord('کباب', 1), PantoWord('قورمه سبزی', 2), PantoWord('فسنجان', 2), PantoWord('املت', 3), PantoWord('سالاد', 3)],
+  'عمومی': [PantoWord('دویدن', 1), PantoWord('شیر', 1), PantoWord('دکتر', 1), PantoWord('چتر', 1), PantoWord('خوشحال', 2), PantoWord('رقصیدن', 2), PantoWord('کتاب خواندن', 1), PantoWord('غذا خوردن', 1), PantoWord('خوابیدن', 1), PantoWord('مسواک زدن', 1), PantoWord('گوش دادن به موسیقی', 2), PantoWord('تلفن زدن', 2), PantoWord('رانندگی', 2), PantoWord('آشپزی', 2), PantoWord('خرید کردن', 2), PantoWord('عکاسی', 2), PantoWord('نقاشی کشیدن', 2), PantoWord('باغبانی', 3), PantoWord('تمیز کردن خانه', 3), PantoWord('منتظر ماندن', 3)],
+  'فیلم و سریال': [PantoWord('شرک', 2), PantoWord('آواتار', 2), PantoWord('تایتانیک', 2), PantoWord('ماتریکس', 3), PantoWord('شیر شاه', 3), PantoWord('هری پاتر', 3), PantoWord('فروزن', 2), PantoWord('جوراسیک پارک', 3), PantoWord('بتمن', 2), PantoWord('سوپرمن', 2), PantoWord('مرد عنکبوتی', 2), PantoWord('دزدان دریایی کارائیب', 3), PantoWord('جنگ ستارگان', 3), PantoWord('ارباب حلقه‌ها', 3), PantoWord('انتقام‌جویان', 3), PantoWord('ماداگاسکار', 2), PantoWord('پاندای کونگ‌فوکار', 2), PantoWord('هالک', 2), PantoWord('آیرون من', 2), PantoWord('مرد مورچه‌ای', 3)],
+  'ضرب‌المثل‌ها': [PantoWord('آب در هاون کوبیدن', 3), PantoWord('دست و پا چلفتی', 3), PantoWord('خون به جگر شدن', 3), PantoWord('چشم و همچشمی', 3), PantoWord('زیر آبی به کسی زدن', 3), PantoWord('گربه را دم حجله کشتن', 3), PantoWord('دیگ به دیگ میگه روت سیاه', 3), PantoWord('آشپز که دو تا شد آش یا شور میشه یا بی‌نمک', 3), PantoWord('از این ستون به آن ستون فرج است', 3), PantoWord('با یک گل بهار نمیشه', 3), PantoWord('خواستن توانستن است', 2), PantoWord('هر که بامش بیش برفش بیشتر', 3), PantoWord('موش تو سوراخ نمیرفت جارو به دمش می‌بست', 3), PantoWord('شتر دیدی ندیدی', 3), PantoWord('دوست آن باشد که گیرد دست دوست', 3), PantoWord('سنگ بزرگ علامت نزدن است', 3), PantoWord('کوه به کوه نمیرسد آدم به آدم میرسد', 3), PantoWord('آب که از سر گذشت چه یک وجب چه صد وجب', 3), PantoWord('هرچه بگندد نمکش میزنند', 3), PantoWord('از تو حرکت از خدا برکت', 2)],
+  'سلبریتی‌ها': [PantoWord('مهران مدیری', 2), PantoWord('عادل فردوسی‌پور', 2), PantoWord('جواد خیابانی', 2), PantoWord('نوید محمدزاده', 3), PantoWord('رامبد جوان', 2), PantoWord('محسن تنابنده', 3), PantoWord('بهاره رهنما', 3), PantoWord('مهدی هاشمی', 3), PantoWord('پرویز پرستویی', 2), PantoWord('رضا عطاران', 2), PantoWord('حمید فرخ‌نژاد', 3), PantoWord('شهاب حسینی', 2), PantoWord('ترانه علیدوستی', 3), PantoWord('هومن سیدی', 3), PantoWord('سعید آقاخانی', 3), PantoWord('علی نصیریان', 3), PantoWord('اکبر عبدی', 2), PantoWord('مریلا زارعی', 3), PantoWord('امیر جعفری', 3), PantoWord('علی صادقی', 3)],
+  'حیوانات': [PantoWord('پنگوئن', 1), PantoWord('زرافه', 1), PantoWord('کانگورو', 2), PantoWord('هشت‌پا', 2), PantoWord('خفاش', 3), PantoWord('آفتاب‌پرست', 3), PantoWord('دلفین', 2), PantoWord('کوالا', 2), PantoWord('شترمرغ', 3), PantoWord('طاووس', 2), PantoWord('تمساح', 2), PantoWord('مار کبری', 3), PantoWord('خرچنگ', 2), PantoWord('عقاب', 2), PantoWord('جغد', 2), PantoWord('حلزون', 3), PantoWord('میمون', 1), PantoWord('کرگدن', 2), PantoWord('اسب آبی', 2), PantoWord('گورخر', 2)],
+  'ورزش': [PantoWord('فوتبال', 1), PantoWord('شنا', 1), PantoWord('والیبال', 2), PantoWord('بسکتبال', 2), PantoWord('شطرنج', 3), PantoWord('کاراته', 3), PantoWord('تنیس', 2), PantoWord('کوهنوردی', 2), PantoWord('بوکس', 2), PantoWord('کشتی', 3), PantoWord('ژیمناستیک', 3), PantoWord('دوچرخه‌سواری', 2), PantoWord('اسکی', 2), PantoWord('اسکیت', 2), PantoWord('گلف', 2), PantoWord('بیسبال', 3), PantoWord('هاکی', 3), PantoWord('بولینگ', 2), PantoWord('تیراندازی', 3), PantoWord('شمشیربازی', 3)],
+  'مشاغل': [PantoWord('پلیس', 1), PantoWord('معلم', 1), PantoWord('خلبان', 2), PantoWord('نقاش', 2), PantoWord('آتش‌نشان', 3), PantoWord('بازیگر', 3), PantoWord('دندانپزشک', 3), PantoWord('مهندس', 2), PantoWord('وکیل', 3), PantoWord('پرستار', 2), PantoWord('نجار', 2), PantoWord('بنا', 2), PantoWord('خیاط', 3), PantoWord('آرایشگر', 2), PantoWord('عکاس', 2), PantoWord('کشاورز', 3), PantoWord('راننده تاکسی', 2), PantoWord('قصاب', 2), PantoWord('نانوا', 2), PantoWord('پستچی', 3)],
+  'احساسات': [PantoWord('عصبانی', 1), PantoWord('خسته', 1), PantoWord('ترسیده', 2), PantoWord('عاشق', 2), PantoWord('مغرور', 3), PantoWord('حسود', 3), PantoWord('خوشحال', 1), PantoWord('غمگین', 2), PantoWord('هیجان‌زده', 2), PantoWord('نگران', 3), PantoWord('شگفت‌زده', 3), PantoWord('آرام', 2), PantoWord('بی‌حوصله', 3), PantoWord('دلواپس', 3), PantoWord('شرمنده', 2), PantoWord('مضطرب', 3), PantoWord('امیدوار', 2), PantoWord('ناامید', 3), PantoWord('متعجب', 2), PantoWord('راضی', 2)],
+  'اشیاء': [PantoWord('چتر', 1), PantoWord('عینک', 1), PantoWord('ساعت', 2), PantoWord('کیف', 2), PantoWord('لپ‌تاپ', 3), PantoWord('آینه', 3), PantoWord('تلفن', 1), PantoWord('دفتر', 1), PantoWord('مداد', 1), PantoWord('کتاب', 2), PantoWord('توپ', 2), PantoWord('پنجره', 2), PantoWord('در', 2), PantoWord('دیوار', 3), PantoWord('فرش', 2), PantoWord('لامپ', 3), PantoWord('صندلی', 1), PantoWord('میز', 2), PantoWord('ماشین', 1), PantoWord('دوچرخه', 2)],
+  'غذا': [PantoWord('پیتزا', 1), PantoWord('کباب', 1), PantoWord('قورمه سبزی', 2), PantoWord('فسنجان', 2), PantoWord('املت', 3), PantoWord('سالاد', 3), PantoWord('سوشی', 2), PantoWord('برگر', 1), PantoWord('ماکارونی', 2), PantoWord('جوجه کباب', 2), PantoWord('قیمه', 3), PantoWord('عدس پلو', 3), PantoWord('زرشک پلو', 3), PantoWord('باقالی پلو', 3), PantoWord('دلمه', 3), PantoWord('کوکو', 2), PantoWord('کشک بادمجان', 3), PantoWord('میگو', 2), PantoWord('ماهی', 2), PantoWord('پنکیک', 1)],
 };
 
 class CategoriesScreen extends StatelessWidget {
@@ -339,13 +342,14 @@ class CategoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('دسته‌بندی کلمات'), backgroundColor: Colors.transparent),
+      appBar: AppBar(title: const Text('دسته‌بندی کلمات پانتومیم'), backgroundColor: Colors.transparent),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: pantoData.keys.map((cat) {
           final List<PantoWord> words = pantoData[cat]!;
           return ExpansionTile(
             title: Text(cat, style: const TextStyle(color: AppColors.pantoBlue, fontWeight: FontWeight.bold)),
+            subtitle: Text('${words.length} کلمه', style: const TextStyle(fontSize: 12, color: AppColors.textSub)),
             children: words.map((w) {
               return ListTile(
                 title: Text(w.word),
@@ -386,7 +390,7 @@ class _SpySetupScreenState extends State<SpySetupScreen> {
           const SizedBox(height: 20),
           const Text('دسته‌بندی', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.spyRed)),
           const SizedBox(height: 10),
-          Wrap(spacing: 8, runSpacing: 8, children: spyData.keys.map((c) => ChoiceChip(label: Text(c), selected: _category == c, onSelected: (v) => setState(() => _category = c))).toList()),
+          Wrap(spacing: 8, runSpacing: 8, children: spyData.keys.map((c) => ChoiceChip(label: Text(c), selected: _category == c, onSelected: (v) => setState(() => _category = v))).toList()),
           const SizedBox(height: 40),
           ElevatedButton(
             onPressed: () {
