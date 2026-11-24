@@ -1,7 +1,7 @@
 name: game_party
 description: Game Party - Spy and Pantomime offline games.
 publish_to: 'none'
-version: 1.0.0+1
+version: 2.1.0+1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -17,6 +17,13 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: false
+  image_path: "assets/images/icon.png"
+  min_sdk_android: 21
 
 flutter:
   uses-material-design: true
