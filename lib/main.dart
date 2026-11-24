@@ -55,7 +55,7 @@ class _GamePartyAppState extends State<GamePartyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Game Party',
+      title: 'گیم پارتی', // اسم اپلیکیشن
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
@@ -73,7 +73,7 @@ class _GamePartyAppState extends State<GamePartyApp> {
   }
 }
 
-// ==================== SPLASH SCREEN (LOADING) ====================
+// ==================== SPLASH SCREEN ====================
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
   @override
@@ -133,7 +133,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
 }
 
-// ==================== HOME SCREEN ====================
+// ==================== HOME SCREEN (FIXED CARDS, NO SCROLL) ====================
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -150,6 +150,7 @@ class HomeScreen extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
+              // Top Bar
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Row(
@@ -164,23 +165,29 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              Image.asset('assets/images/1.png', width: 300),
-              const SizedBox(height: 30),
+              // Logo
+              Image.asset('assets/images/1.png', width: 280),
+              const SizedBox(height: 20),
+              
+              // Main Cards (Fixed using Expanded instead of ScrollView)
               Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   child: Column(
                     children: [
-                      _ImageCard(
-                        imagePath: 'assets/images/2.png',
-                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SpySetupScreen())),
+                      Expanded(
+                        child: _ImageCard(
+                          imagePath: 'assets/images/2.png',
+                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SpySetupScreen())),
+                        ),
                       ),
-                      const SizedBox(height: 20),
-                      _ImageCard(
-                        imagePath: 'assets/images/3.png',
-                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PantoSetupScreen())),
+                      const SizedBox(height: 16),
+                      Expanded(
+                        child: _ImageCard(
+                          imagePath: 'assets/images/3.png',
+                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PantoSetupScreen())),
+                        ),
                       ),
-                      const SizedBox(height: 30),
                     ],
                   ),
                 ),
@@ -203,6 +210,7 @@ class _ImageCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
@@ -211,7 +219,10 @@ class _ImageCard extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24),
-          child: Image.asset(imagePath, width: double.infinity, fit: BoxFit.fitWidth),
+          child: Image.asset(
+            imagePath,
+            fit: BoxFit.contain, // جلوگیری از بریدگی و کشیدگی
+          ),
         ),
       ),
     );
@@ -275,7 +286,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Divider(color: AppColors.cardBg),
           const ListTile(
             leading: Icon(Icons.info_outline, color: AppColors.textSub),
-            title: Text('درباره Game Party'),
+            title: Text('درباره گیم پارتی'),
             subtitle: Text('نسخه 2.0.0 - قوانین کامل و امتیازدهی حرفه‌ای', style: TextStyle(color: AppColors.textSub)),
           ),
         ],
@@ -284,7 +295,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 }
 
-// ==================== SPY GAME FLOW (FULL RULES) ====================
+// ==================== SPY GAME FLOW ====================
 class SpySetupScreen extends StatefulWidget {
   const SpySetupScreen({super.key});
   @override
@@ -551,15 +562,14 @@ class _SpyResultScreenState extends State<SpyResultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Scoring logic based on Spyfall rules
     String resultText = '';
     Color resultColor = Colors.white;
 
     if (widget.accusedIsSpy) {
-      resultText = 'جاسوس پیدا شد! شهروندان ۱ امتیاز گرفتند.';
+      resultText = 'جاسوس پیدا شد!\nشهروندان ۱ امتیاز گرفتند.';
       resultColor = Colors.green;
     } else {
-      resultText = 'اشتباه بود! جاسوس برنده شد و ۱ امتیاز گرفت.';
+      resultText = 'اشتباه بود!\nجاسوس برنده شد و ۱ امتیاز گرفت.';
       resultColor = AppColors.spyRed;
     }
 
@@ -594,7 +604,7 @@ class _SpyResultScreenState extends State<SpyResultScreen> {
   }
 }
 
-// ==================== PANTOMIME FLOW (ADVANCED WITH TEAM NAMES & SCORING) ====================
+// ==================== PANTOMIME FLOW ====================
 class PantoSetupScreen extends StatefulWidget {
   const PantoSetupScreen({super.key});
   @override
@@ -713,7 +723,6 @@ class _PantoSetupScreenState extends State<PantoSetupScreen> {
   }
 }
 
-// Words with difficulty (1 = Easy, 2 = Medium, 3 = Hard)
 const pantoCategories = {
   'عمومی': [
     {'word': 'دویدن', 'diff': 1}, {'word': 'شیر', 'diff': 1}, {'word': 'دکتر', 'diff': 1},
@@ -752,7 +761,7 @@ class _PantoGameScreenState extends State<PantoGameScreen> {
   
   int _teamA_Score = 0;
   int _teamB_Score = 0;
-  int _currentTeam = 0; // 0 = Team A, 1 = Team B
+  int _currentTeam = 0;
   int _index = 0;
   
   bool _started = false;
@@ -778,7 +787,6 @@ class _PantoGameScreenState extends State<PantoGameScreen> {
 
   void _nextWord({required bool correct}) {
     if (correct) {
-      // Add points based on difficulty
       int points = widget.words[_index]['diff'];
       setState(() {
         if (widget.isTeamMode) {
@@ -808,7 +816,6 @@ class _PantoGameScreenState extends State<PantoGameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Start Screen
     if (!_started && !_roundOver && !_gameOver) {
       return Scaffold(
         body: Center(
@@ -835,7 +842,6 @@ class _PantoGameScreenState extends State<PantoGameScreen> {
       );
     }
 
-    // Round Over
     if (_roundOver) {
       return Scaffold(
         body: Center(
@@ -857,7 +863,6 @@ class _PantoGameScreenState extends State<PantoGameScreen> {
       );
     }
 
-    // Game Over
     if (_gameOver) {
       bool isDraw = _teamA_Score == _teamB_Score;
       String winner = _teamA_Score > _teamB_Score ? widget.teamAName : widget.teamBName;
@@ -882,7 +887,6 @@ class _PantoGameScreenState extends State<PantoGameScreen> {
       );
     }
 
-    // Active Game
     int currentDifficulty = widget.words[_index]['diff'];
     String currentWord = widget.words[_index]['word'];
 
@@ -908,7 +912,6 @@ class _PantoGameScreenState extends State<PantoGameScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Difficulty Indicator
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(3, (i) => Icon(
