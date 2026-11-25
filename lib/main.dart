@@ -309,6 +309,374 @@ void showRulesSheet(BuildContext context, String title, List<RuleSection> sectio
 }
 
 // ============================================================
+//  SETUP UI KIT (حرفه‌ای‌سازی صفحه‌های تنظیم بازی)
+// ============================================================
+BoxDecoration _tileDeco() => BoxDecoration(
+      color: AppColors.cardBg.withOpacity(0.9),
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: Colors.white.withOpacity(0.06)),
+    );
+
+InputDecoration fieldDeco(String label, Color color, {IconData icon = Icons.person_rounded, Color? iconColor}) =>
+    InputDecoration(
+      labelText: label,
+      isDense: true,
+      filled: true,
+      fillColor: Colors.white.withOpacity(0.05),
+      prefixIcon: Icon(icon, size: 18, color: iconColor ?? color),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: color, width: 1.5),
+      ),
+    );
+
+class GlowBackground extends StatelessWidget {
+  final Color color;
+  final Widget child;
+  const GlowBackground({super.key, required this.color, required this.child});
+  @override
+  Widget build(BuildContext context) => AnimatedContainer(
+        duration: const Duration(milliseconds: 400),
+        decoration: BoxDecoration(
+          gradient: RadialGradient(
+            center: const Alignment(0, -1.1),
+            radius: 1.3,
+            colors: [color.withOpacity(0.30), AppColors.bg],
+            stops: const [0, 0.7],
+          ),
+        ),
+        child: child,
+      );
+}
+
+class SetupHeader extends StatelessWidget {
+  final IconData icon;
+  final String title, subtitle;
+  final Color color;
+  final VoidCallback onRules;
+  const SetupHeader({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.color,
+    required this.onRules,
+  });
+  @override
+  Widget build(BuildContext context) => AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [color, Color.lerp(color, AppColors.bg, 0.55)!],
+          ),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [BoxShadow(color: color.withOpacity(0.35), blurRadius: 24, offset: const Offset(0, 10))],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 58,
+              height: 58,
+              decoration: BoxDecoration(color: Colors.white.withOpacity(0.18), borderRadius: BorderRadius.circular(18)),
+              child: Icon(icon, size: 32, color: Colors.white),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 4),
+                  Text(subtitle, style: const TextStyle(fontSize: 13, color: Colors.white70, height: 1.5)),
+                ],
+              ),
+            ),
+            IconButton(
+              tooltip: 'قوانین',
+              icon: const Icon(Icons.menu_book_rounded, color: Colors.white),
+              style: IconButton.styleFrom(backgroundColor: Colors.white.withOpacity(0.18)),
+              onPressed: () {
+                AppSettings.vibrate();
+                onRules();
+              },
+            ),
+          ],
+        ),
+      );
+}
+
+class SetupSection extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final Color color;
+  final Widget child;
+  final Widget? trailing;
+  const SetupSection({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.color,
+    required this.child,
+    this.trailing,
+  });
+  @override
+  Widget build(BuildContext context) => Container(
+        width: double.infinity,
+        margin: const EdgeInsets.only(bottom: 14),
+        padding: const EdgeInsets.all(16),
+        decoration: _tileDeco(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 34,
+                  height: 34,
+                  decoration: BoxDecoration(color: color.withOpacity(0.18), borderRadius: BorderRadius.circular(10)),
+                  child: Icon(icon, size: 18, color: color),
+                ),
+                const SizedBox(width: 10),
+                Expanded(child: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
+                if (trailing != null) trailing!,
+              ],
+            ),
+            const SizedBox(height: 14),
+            child,
+          ],
+        ),
+      );
+}
+
+class _RoundBtn extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+  const _RoundBtn(this.icon, this.color, this.onTap);
+  @override
+  Widget build(BuildContext context) => Material(
+        color: color.withOpacity(0.18),
+        shape: const CircleBorder(),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: () {
+            AppSettings.vibrate();
+            onTap();
+          },
+          child: SizedBox(width: 38, height: 38, child: Icon(icon, size: 20, color: color)),
+        ),
+      );
+}
+
+class CounterTile extends StatelessWidget {
+  final IconData icon;
+  final String label, value;
+  final Color color;
+  final VoidCallback onInc, onDec;
+  const CounterTile({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.color,
+    required this.onInc,
+    required this.onDec,
+  });
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(14),
+        decoration: _tileDeco(),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Icon(icon, size: 18, color: color),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 13, color: AppColors.textSub)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _RoundBtn(Icons.remove, color, onDec),
+                Text(value, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+                _RoundBtn(Icons.add, color, onInc),
+              ],
+            ),
+          ],
+        ),
+      );
+}
+
+class ToggleTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool value;
+  final Color color;
+  final ValueChanged<bool> onChanged;
+  const ToggleTile({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.color,
+    required this.onChanged,
+  });
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(14),
+        decoration: _tileDeco(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(icon, size: 18, color: color),
+                const SizedBox(width: 6),
+                Expanded(child: Text(label, style: const TextStyle(fontSize: 13, color: AppColors.textSub))),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Switch(
+              value: value,
+              activeColor: color,
+              onChanged: (v) {
+                AppSettings.vibrate();
+                onChanged(v);
+              },
+            ),
+          ],
+        ),
+      );
+}
+
+class Pill extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final Color color;
+  final VoidCallback onTap;
+  const Pill({super.key, required this.label, required this.selected, required this.color, required this.onTap});
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: () {
+          AppSettings.vibrate();
+          onTap();
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+          decoration: BoxDecoration(
+            gradient: selected ? LinearGradient(colors: [color, Color.lerp(color, AppColors.bg, 0.35)!]) : null,
+            color: selected ? null : Colors.white.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(color: selected ? color : Colors.white.withOpacity(0.12)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (selected) ...[const Icon(Icons.check, size: 15, color: Colors.white), const SizedBox(width: 5)],
+              Text(label,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                    color: selected ? Colors.white : AppColors.textSub,
+                  )),
+            ],
+          ),
+        ),
+      );
+}
+
+class StartBar extends StatelessWidget {
+  final String label;
+  final Color color;
+  final VoidCallback onPressed;
+  const StartBar({super.key, required this.label, required this.color, required this.onPressed});
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 14),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.transparent, AppColors.bg.withOpacity(0.95), AppColors.bg],
+          ),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Material(
+            color: Colors.transparent,
+            child: Ink(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [color, Color.lerp(color, AppColors.bg, 0.3)!]),
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: [BoxShadow(color: color.withOpacity(0.45), blurRadius: 20, offset: const Offset(0, 8))],
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(18),
+                onTap: () {
+                  AppSettings.vibrate();
+                  onPressed();
+                },
+                child: SizedBox(
+                  height: 58,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.play_arrow_rounded, size: 30, color: Colors.white),
+                      const SizedBox(width: 8),
+                      Text(label, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+}
+
+class SetupScaffold extends StatelessWidget {
+  final Color color;
+  final String title, startLabel;
+  final VoidCallback onStart;
+  final List<Widget> children;
+  const SetupScaffold({
+    super.key,
+    required this.color,
+    required this.title,
+    required this.startLabel,
+    required this.onStart,
+    required this.children,
+  });
+  @override
+  Widget build(BuildContext context) => GlowBackground(
+        color: color,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(title: Text(title)),
+          body: Column(
+            children: [
+              Expanded(child: ListView(padding: const EdgeInsets.fromLTRB(20, 4, 20, 20), children: children)),
+              StartBar(label: startLabel, color: color, onPressed: onStart),
+            ],
+          ),
+        ),
+      );
+}
+
+// ============================================================
 //  APP + SPLASH + HOME
 // ============================================================
 class GamePartyApp extends StatelessWidget {
@@ -599,10 +967,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: _confirmReset,
           ),
           const Divider(color: AppColors.cardBg),
-          const ListTile(
-            leading: Icon(Icons.info_outline, color: AppColors.textSub),
-            title: Text('درباره گیم پارتی'),
-            subtitle: Text('نسخه 5.0.0 - جاسوس کامل، پانتومیم چندتیمی', style: TextStyle(color: AppColors.textSub)),
+          ListTile(
+            leading: const Icon(Icons.info_outline, color: AppColors.textSub),
+            title: const Text('درباره گیم پارتی'),
+            isThreeLine: true,
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                SizedBox(height: 2),
+                Text('نسخه 5.1.0', style: TextStyle(color: AppColors.textSub)),
+                SizedBox(height: 6),
+                Text(
+                  'Creator: Mr_Ping',
+                  textDirection: TextDirection.ltr,
+                  style: TextStyle(color: AppColors.gold, fontWeight: FontWeight.bold, fontSize: 15, letterSpacing: 0.5),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -810,13 +1191,19 @@ class SpySetupScreen extends StatefulWidget {
 }
 
 class _SpySetupScreenState extends State<SpySetupScreen> {
+  static const _c = AppColors.spyRed;
   int _players = 5, _spies = 1, _time = 180;
-  bool _spyHint = true;
+  bool _spyHint = true, _namesOpen = false;
   final Set<String> _selected = {'مکان‌ها'};
   final List<TextEditingController> _ctrls =
       List.generate(12, (i) => TextEditingController(text: 'بازیکن ${i + 1}'));
 
   int get _maxSpies => min(3, max(1, (_players - 1) ~/ 2));
+
+  String _name(int i) {
+    final t = _ctrls[i].text.trim();
+    return t.isEmpty ? 'بازیکن ${i + 1}' : t;
+  }
 
   @override
   void dispose() {
@@ -831,16 +1218,12 @@ class _SpySetupScreenState extends State<SpySetupScreen> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('حداقل یک دسته‌بندی انتخاب کن.')));
       return;
     }
-    final names = List.generate(_players, (i) {
-      final t = _ctrls[i].text.trim();
-      return t.isEmpty ? 'بازیکن ${i + 1}' : t;
-    });
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => SpyGameScreen(
           config: SpyConfig(
-            names: names,
+            names: List.generate(_players, _name),
             spies: _spies,
             seconds: _time,
             categories: _selected.toList(),
@@ -853,107 +1236,142 @@ class _SpySetupScreenState extends State<SpySetupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('تنظیم جاسوس'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.menu_book_rounded),
-            onPressed: () => showRulesSheet(context, 'قوانین بازی جاسوس', spyRules),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+    final allSelected = _selected.length == spyData.length;
+    return SetupScaffold(
+      color: _c,
+      title: 'تنظیم جاسوس',
+      startLabel: 'شروع بازی',
+      onStart: _start,
+      children: [
+        SetupHeader(
+          icon: Icons.visibility_off_rounded,
+          title: 'بازی جاسوس',
+          subtitle: 'جاسوس را پیدا کن، قبل از اینکه کلمه را حدس بزند',
+          color: _c,
+          onRules: () => showRulesSheet(context, 'قوانین بازی جاسوس', spyRules),
+        ),
+        Row(
           children: [
-            StepperRow(
-              title: 'تعداد بازیکنان',
-              value: '$_players',
-              color: AppColors.spyRed,
-              onInc: () => setState(() => _players = min(_players + 1, 12)),
-              onDec: () => setState(() {
-                _players = max(_players - 1, 3);
-                _spies = min(_spies, _maxSpies);
-              }),
-            ),
-            StepperRow(
-              title: 'تعداد جاسوس‌ها',
-              value: '$_spies',
-              color: AppColors.spyRed,
-              onInc: () => setState(() => _spies = min(_spies + 1, _maxSpies)),
-              onDec: () => setState(() => _spies = max(_spies - 1, 1)),
-            ),
-            StepperRow(
-              title: 'زمان بحث',
-              value: '${_time ~/ 60}:${(_time % 60).toString().padLeft(2, '0')}',
-              color: AppColors.spyRed,
-              onInc: () => setState(() => _time = min(_time + 30, 600)),
-              onDec: () => setState(() => _time = max(_time - 30, 60)),
-            ),
-            AppCard(
-              child: SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: const Text('جاسوس دسته‌بندی را ببیند'),
-                subtitle: const Text('برای بازی سخت‌تر خاموش کن', style: TextStyle(color: AppColors.textSub, fontSize: 13)),
-                activeColor: AppColors.spyRed,
-                value: _spyHint,
-                onChanged: (v) => setState(() => _spyHint = v),
+            Expanded(
+              child: CounterTile(
+                icon: Icons.groups_rounded,
+                label: 'بازیکنان',
+                value: '$_players',
+                color: _c,
+                onInc: () => setState(() => _players = min(_players + 1, 12)),
+                onDec: () => setState(() {
+                  _players = max(_players - 1, 3);
+                  _spies = min(_spies, _maxSpies);
+                }),
               ),
             ),
-            AppCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SectionTitle('دسته‌بندی (چندتایی)', color: AppColors.spyRed),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: spyData.keys
-                        .map((c) => FilterChip(
-                              label: Text(c),
-                              selected: _selected.contains(c),
-                              selectedColor: AppColors.spyRed.withOpacity(0.35),
-                              onSelected: (v) {
-                                AppSettings.vibrate();
-                                setState(() => v ? _selected.add(c) : _selected.remove(c));
-                              },
-                            ))
-                        .toList(),
-                  ),
-                ],
+            const SizedBox(width: 12),
+            Expanded(
+              child: CounterTile(
+                icon: Icons.person_search_rounded,
+                label: 'جاسوس‌ها',
+                value: '$_spies',
+                color: _c,
+                onInc: () => setState(() => _spies = min(_spies + 1, _maxSpies)),
+                onDec: () => setState(() => _spies = max(_spies - 1, 1)),
               ),
             ),
-            AppCard(
-              child: Theme(
-                data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-                child: ExpansionTile(
-                  tilePadding: EdgeInsets.zero,
-                  title: const Text('نام بازیکن‌ها', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        const SizedBox(height: 12),
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: CounterTile(
+                  icon: Icons.timer_rounded,
+                  label: 'زمان بحث',
+                  value: '${_time ~/ 60}:${(_time % 60).toString().padLeft(2, '0')}',
+                  color: _c,
+                  onInc: () => setState(() => _time = min(_time + 30, 600)),
+                  onDec: () => setState(() => _time = max(_time - 30, 60)),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: ToggleTile(
+                  icon: Icons.lightbulb_rounded,
+                  label: 'جاسوس دسته را ببیند',
+                  value: _spyHint,
+                  color: _c,
+                  onChanged: (v) => setState(() => _spyHint = v),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 14),
+        SetupSection(
+          icon: Icons.category_rounded,
+          title: 'دسته‌بندی کلمه',
+          color: _c,
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              Pill(
+                label: 'همه',
+                selected: allSelected,
+                color: AppColors.gold,
+                onTap: () => setState(() {
+                  if (allSelected) {
+                    _selected.clear();
+                  } else {
+                    _selected.addAll(spyData.keys);
+                  }
+                }),
+              ),
+              for (final cat in spyData.keys)
+                Pill(
+                  label: cat,
+                  selected: _selected.contains(cat),
+                  color: _c,
+                  onTap: () => setState(() => _selected.contains(cat) ? _selected.remove(cat) : _selected.add(cat)),
+                ),
+            ],
+          ),
+        ),
+        SetupSection(
+          icon: Icons.edit_note_rounded,
+          title: 'نام بازیکن‌ها',
+          color: _c,
+          trailing: TextButton(
+            onPressed: () => setState(() => _namesOpen = !_namesOpen),
+            child: Text(_namesOpen ? 'بستن' : 'ویرایش', style: const TextStyle(color: _c)),
+          ),
+          child: _namesOpen
+              ? Column(
                   children: [
                     for (int i = 0; i < _players; i++)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10),
-                        child: TextField(
-                          controller: _ctrls[i],
-                          decoration: InputDecoration(
-                            labelText: 'بازیکن ${i + 1}',
-                            border: const OutlineInputBorder(),
-                            isDense: true,
-                          ),
+                        child: TextField(controller: _ctrls[i], decoration: fieldDeco('بازیکن ${i + 1}', _c)),
+                      ),
+                  ],
+                )
+              : Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (int i = 0; i < _players; i++)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.06),
+                          borderRadius: BorderRadius.circular(20),
                         ),
+                        child: Text(_name(i), style: const TextStyle(fontSize: 13, color: AppColors.textSub)),
                       ),
                   ],
                 ),
-              ),
-            ),
-            const SizedBox(height: 6),
-            BigButton(label: 'شروع بازی', icon: Icons.play_arrow_rounded, color: AppColors.spyRed, onPressed: _start),
-            const SizedBox(height: 20),
-          ],
         ),
-      ),
+      ],
     );
   }
 }
@@ -1599,6 +2017,12 @@ class _PantoSetupScreenState extends State<PantoSetupScreen> {
   final _defaults = ['تیم قرمز', 'تیم آبی', 'تیم زرد', 'تیم سبز', 'تیم بنفش', 'تیم نارنجی'];
   late final List<TextEditingController> _ctrls = _defaults.map((e) => TextEditingController(text: e)).toList();
 
+  List<PantoWord> get _pool => [
+        for (final c in _cats)
+          for (final w in pantoData[c]!)
+            if (_diff == 0 || w.diff == _diff) w,
+      ];
+
   @override
   void dispose() {
     for (final c in _ctrls) {
@@ -1607,41 +2031,8 @@ class _PantoSetupScreenState extends State<PantoSetupScreen> {
     super.dispose();
   }
 
-  void _showModeInfo() {
-    AppSettings.vibrate();
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: AppColors.cardBg,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
-      builder: (_) => Directionality(
-        textDirection: TextDirection.rtl,
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(children: [
-                Icon(_mode.icon, color: _mode.color, size: 30),
-                const SizedBox(width: 10),
-                Text(_mode.title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-              ]),
-              const SizedBox(height: 20),
-              Text(_mode.desc, style: const TextStyle(fontSize: 16, height: 1.6), textAlign: TextAlign.center),
-              const SizedBox(height: 24),
-              ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text('فهمیدم')),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   void _start() {
-    final pool = <PantoWord>[
-      for (final c in _cats)
-        for (final w in pantoData[c]!)
-          if (_diff == 0 || w.diff == _diff) w,
-    ];
+    final pool = _pool;
     if (pool.length < 8) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('کلمهٔ کافی نیست. دسته‌های بیشتری انتخاب کن یا سختی را روی «ترکیبی» بگذار.')),
@@ -1662,136 +2053,199 @@ class _PantoSetupScreenState extends State<PantoSetupScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    const diffLabels = ['ترکیبی', 'آسان', 'متوسط', 'سخت'];
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('تنظیم پانتومیم'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.menu_book_rounded),
-            onPressed: () => showRulesSheet(context, 'قوانین بازی پانتومیم', pantoRules),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget _modeCard(PantoMode m) {
+    final sel = _mode == m;
+    return GestureDetector(
+      onTap: () {
+        AppSettings.vibrate();
+        setState(() => _mode = m);
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          gradient: sel
+              ? LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [m.color, Color.lerp(m.color, AppColors.bg, 0.5)!],
+                )
+              : null,
+          color: sel ? null : Colors.white.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: sel ? m.color : Colors.white.withOpacity(0.1), width: sel ? 2 : 1),
+          boxShadow: sel ? [BoxShadow(color: m.color.withOpacity(0.35), blurRadius: 14, offset: const Offset(0, 6))] : null,
+        ),
+        child: Row(
           children: [
-            const SectionTitle('حالت بازی', color: AppColors.pantoBlue),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: PantoMode.values
-                        .map((m) => ChoiceChip(
-                              label: Text(m.title),
-                              avatar: Icon(m.icon, size: 18, color: _mode == m ? Colors.white : m.color),
-                              selected: _mode == m,
-                              selectedColor: m.color,
-                              onSelected: (s) {
-                                if (s) {
-                                  AppSettings.vibrate();
-                                  setState(() => _mode = m);
-                                }
-                              },
-                            ))
-                        .toList(),
-                  ),
-                ),
-                IconButton(icon: const Icon(Icons.info_outline, color: AppColors.gold), onPressed: _showModeInfo),
-              ],
-            ),
-            const SizedBox(height: 16),
-            StepperRow(
-              title: 'تعداد تیم‌ها / بازیکنان',
-              value: '$_teams',
-              color: _mode.color,
-              onInc: () => setState(() => _teams = min(_teams + 1, 6)),
-              onDec: () => setState(() => _teams = max(_teams - 1, 2)),
-            ),
-            AppCard(
+            Icon(m.icon, size: 28, color: sel ? Colors.white : m.color),
+            const SizedBox(width: 10),
+            Expanded(
               child: Column(
-                children: [
-                  for (int i = 0; i < _teams; i++)
-                    Padding(
-                      padding: EdgeInsets.only(bottom: i == _teams - 1 ? 0 : 10),
-                      child: TextField(
-                        controller: _ctrls[i],
-                        decoration: InputDecoration(
-                          labelText: 'نام ${i + 1}',
-                          isDense: true,
-                          prefixIcon: Icon(Icons.circle, color: AppColors.teams[i], size: 12),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            StepperRow(
-              title: 'تعداد نوبت هر تیم',
-              value: '$_turnsPerTeam',
-              color: _mode.color,
-              onInc: () => setState(() => _turnsPerTeam = min(_turnsPerTeam + 1, 10)),
-              onDec: () => setState(() => _turnsPerTeam = max(_turnsPerTeam - 1, 1)),
-            ),
-            AppCard(
-              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SectionTitle('سختی کلمه‌ها'),
-                  Wrap(
-                    spacing: 8,
-                    children: [
-                      for (int i = 0; i < diffLabels.length; i++)
-                        ChoiceChip(
-                          label: Text(diffLabels[i]),
-                          selected: _diff == i,
-                          selectedColor: _mode.color.withOpacity(0.5),
-                          onSelected: (_) {
-                            AppSettings.vibrate();
-                            setState(() => _diff = i);
-                          },
-                        ),
-                    ],
-                  ),
+                  Text(m.title.split(' ').first,
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: sel ? Colors.white : Colors.white70)),
+                  const SizedBox(height: 2),
+                  Text('${m.seconds} ثانیه',
+                      style: TextStyle(fontSize: 12, color: sel ? Colors.white70 : AppColors.textSub)),
                 ],
               ),
             ),
-            AppCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SectionTitle('دسته‌بندی کلمات (چندتایی)', color: AppColors.pantoBlue),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: pantoData.keys
-                        .map((c) => FilterChip(
-                              label: Text(c),
-                              selected: _cats.contains(c),
-                              selectedColor: _mode.color.withOpacity(0.5),
-                              onSelected: (v) {
-                                AppSettings.vibrate();
-                                setState(() => v ? _cats.add(c) : _cats.remove(c));
-                              },
-                            ))
-                        .toList(),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 6),
-            BigButton(label: 'شروع مسابقه', icon: Icons.play_arrow_rounded, color: _mode.color, onPressed: _start),
-            const SizedBox(height: 20),
           ],
         ),
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    const diffLabels = ['ترکیبی', 'آسان', 'متوسط', 'سخت'];
+    final c = _mode.color;
+    final allCats = _cats.length == pantoData.length;
+    return SetupScaffold(
+      color: c,
+      title: 'تنظیم پانتومیم',
+      startLabel: 'شروع مسابقه',
+      onStart: _start,
+      children: [
+        SetupHeader(
+          icon: Icons.theater_comedy_rounded,
+          title: 'بازی پانتومیم',
+          subtitle: 'بدون حرف زدن نشان بده، تیمت حدس بزند',
+          color: c,
+          onRules: () => showRulesSheet(context, 'قوانین بازی پانتومیم', pantoRules),
+        ),
+        SetupSection(
+          icon: Icons.bolt_rounded,
+          title: 'حالت بازی',
+          color: c,
+          child: Column(
+            children: [
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 1.9,
+                padding: EdgeInsets.zero,
+                children: [for (final m in PantoMode.values) _modeCard(m)],
+              ),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                child: Container(
+                  key: ValueKey(_mode),
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(top: 12),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: c.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: c.withOpacity(0.35)),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.info_outline_rounded, size: 18, color: c),
+                      const SizedBox(width: 8),
+                      Expanded(child: Text(_mode.desc, style: const TextStyle(fontSize: 13.5, height: 1.6))),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: CounterTile(
+                icon: Icons.groups_rounded,
+                label: 'تیم‌ها / بازیکنان',
+                value: '$_teams',
+                color: c,
+                onInc: () => setState(() => _teams = min(_teams + 1, 6)),
+                onDec: () => setState(() => _teams = max(_teams - 1, 2)),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: CounterTile(
+                icon: Icons.repeat_rounded,
+                label: 'نوبت هر تیم',
+                value: '$_turnsPerTeam',
+                color: c,
+                onInc: () => setState(() => _turnsPerTeam = min(_turnsPerTeam + 1, 10)),
+                onDec: () => setState(() => _turnsPerTeam = max(_turnsPerTeam - 1, 1)),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        SetupSection(
+          icon: Icons.flag_rounded,
+          title: 'نام تیم‌ها',
+          color: c,
+          child: Column(
+            children: [
+              for (int i = 0; i < _teams; i++)
+                Padding(
+                  padding: EdgeInsets.only(bottom: i == _teams - 1 ? 0 : 10),
+                  child: TextField(
+                    controller: _ctrls[i],
+                    decoration: fieldDeco('تیم ${i + 1}', AppColors.teams[i], icon: Icons.circle, iconColor: AppColors.teams[i]),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        SetupSection(
+          icon: Icons.local_fire_department_rounded,
+          title: 'سختی کلمه‌ها',
+          color: c,
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (int i = 0; i < diffLabels.length; i++)
+                Pill(label: diffLabels[i], selected: _diff == i, color: c, onTap: () => setState(() => _diff = i)),
+            ],
+          ),
+        ),
+        SetupSection(
+          icon: Icons.category_rounded,
+          title: 'دسته‌بندی کلمات',
+          color: c,
+          trailing: Text('${_pool.length} کلمه', style: const TextStyle(fontSize: 13, color: AppColors.textSub)),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              Pill(
+                label: 'همه',
+                selected: allCats,
+                color: AppColors.gold,
+                onTap: () => setState(() {
+                  if (allCats) {
+                    _cats.clear();
+                  } else {
+                    _cats.addAll(pantoData.keys);
+                  }
+                }),
+              ),
+              for (final cat in pantoData.keys)
+                Pill(
+                  label: cat,
+                  selected: _cats.contains(cat),
+                  color: c,
+                  onTap: () => setState(() => _cats.contains(cat) ? _cats.remove(cat) : _cats.add(cat)),
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
