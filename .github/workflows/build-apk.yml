@@ -1,3 +1,4 @@
+
 name: Build APK
 
 on:
@@ -16,18 +17,17 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: zulu
           java-version: '17'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: stable
 
       - name: Get dependencies
         run: flutter pub get
 
-      # --- مراحل رمزگشایی و ساخت کیستور ---
       - name: Decode Keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
@@ -40,13 +40,9 @@ jobs:
           keyAlias=${{ secrets.KEY_ALIAS }}
           storeFile=upload-keystore.jks
           EOF
-      # ---------------------------------------
 
       - name: Generate App Icons
-        run: flutter pub run flutter_launcher_icons:main
-
-      - name: Generate Android platform files
-        run: flutter create . --platforms=android
+        run: dart run flutter_launcher_icons
 
       - name: Build APK
         run: flutter build apk --release
