@@ -1,7 +1,7 @@
 name: game_party
 description: Game Party - Ultimate Party Games
 publish_to: 'none'
-version: 5.1.0+1
+version: 5.2.0+2
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
