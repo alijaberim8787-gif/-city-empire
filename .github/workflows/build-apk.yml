@@ -27,9 +27,6 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Generate Android platform files
-        run: flutter create . --platforms=android
-
       # --- مراحل رمزگشایی و ساخت کیستور ---
       - name: Decode Keystore
         run: |
@@ -47,6 +44,9 @@ jobs:
 
       - name: Generate App Icons
         run: flutter pub run flutter_launcher_icons:main
+
+      - name: Generate Android platform files
+        run: flutter create . --platforms=android
 
       - name: Build APK
         run: flutter build apk --release
