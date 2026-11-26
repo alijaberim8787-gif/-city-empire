@@ -28,6 +28,14 @@ jobs:
       - name: Restore Android platform files
         run: flutter create --platforms=android --project-name game_party --org com.example .
 
+      - name: Configure Android Gradle
+        run: |
+          mkdir -p android
+          touch android/gradle.properties
+          if ! grep -q '^android.newDsl=' android/gradle.properties; then
+            echo 'android.newDsl=false' >> android/gradle.properties
+          fi
+
       - name: Get dependencies
         run: flutter pub get
 
